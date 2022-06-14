@@ -12,7 +12,9 @@ API部分
 
 使用例
 
+````
 curl -X POST -H "Content-Type: application/json" -d '{"name":"ロシア"}' http://127.0.0.1:8000/tags/
+````
 
 成功していれば````uvicorn run:app````した方のコンソール画面に````name='ロシア'````と出ます
 
