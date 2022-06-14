@@ -11,6 +11,7 @@ API部分
 ````POST http://127.0.0.1:8000/tag/````でリクエストボディに{"name":タグ名}で追加可能.
 
 使用例
+
 curl -X POST -H "Content-Type: application/json" -d '{"name":"ロシア"}' http://127.0.0.1:8000/tags/
 
 成功していれば````uvicorn run:app````した方のコンソール画面に````name='ロシア'````と出ます
@@ -20,6 +21,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"name":"ロシア"}' http:
 ````POST http://127.0.0.1:8000/articles/````でリクエストボディに{"title":タイトル,"article":記事本文,"tags":タグのリスト,"comment":コメントかどうかのフラグ,"timestamp":日付}で追加可能.
 
 使用例
+
 curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukuraina","article":"戦っている","tags":["ロシア","ウクライナ","戦争"],"comment":"False","timestamp":"2022-06-12"}' http://127.0.0.1:8000/articles/
 
 成功していれば````uvicorn run:app````した方のコンソール画面に
@@ -32,6 +34,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukurain
 ````GET http://127.0.0.1:8000/articles/````でクエリパラメータに{タグ名，コメントかどうかのフラグ，年，月，日}で該当記事を取り出せます(必ずしも全ての指定をする必要性はありません)
 
 使用例
+
 ````curl 'http://127.0.0.1:8000/articles/?tag=russia&comment=False&year=2022&month=8&day=12'````
 
 成功していれば````uvicorn run:app````した方のコンソール画面に
