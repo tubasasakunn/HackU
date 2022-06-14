@@ -24,7 +24,9 @@ curl -X POST -H "Content-Type: application/json" -d '{"name":"ロシア"}' http:
 
 使用例
 
+````
 curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukuraina","article":"戦っている","tags":["ロシア","ウクライナ","戦争"],"comment":"False","timestamp":"2022-06-12"}' http://127.0.0.1:8000/articles/
+````
 
 成功していれば````uvicorn run:app````した方のコンソール画面に
 
