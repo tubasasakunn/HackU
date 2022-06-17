@@ -2,9 +2,20 @@
 API部分
 
 # 準備
-```` pip install fastapi "uvicorn[standard]"````
 
+## APIの作成
+必要なライブラリのインストール
+```` 
+pip install fastapi "uvicorn[standard]" mysql-connector-python pandas
+````
+APIの実行
 ````uvicorn run:app````
+
+## MySQLの設定
+MySQLをインストールし，host,user,passwdをconfig.ymlに記述する．
+```` python adapter.py````
+で動作確認できる．
+（DBを削除し，20個のランダムなデータを作成し，ランダムにデータを取り出す）
 
 # 各API
 ## タグの追加
@@ -20,17 +31,17 @@ curl -X POST -H "Content-Type: application/json" -d '{"name":"ロシア"}' http:
 
 ## 記事の追加
 
-````POST http://127.0.0.1:8000/articles/````でリクエストボディに{"title":タイトル,"article":記事本文,"tags":タグのリスト,"comment":コメントかどうかのフラグ,"timestamp":日付}で追加可能.
+````POST http://127.0.0.1:8000/articles/````でリクエストボディに{"title":タイトル,"article":記事本文,"tags":タグのリスト,"comment":コメントかどうかのフラグ,"timestamp":日付(yyyy-mm-dd),"source":ソース名,"parent":親の記事id}で追加可能.
 
 使用例
 
 ````
-curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukuraina","article":"戦っている","tags":["ロシア","ウクライナ","戦争"],"comment":"False","timestamp":"2022-06-12"}' http://127.0.0.1:8000/articles/
+curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukuraina","article":"戦っている","tags":["ロシア","ウクライナ","戦争"],"comment":"False","timestamp":"2022-06-12","source":"TV","parent":12}' http://127.0.0.1:8000/articles/
 ````
 
 成功していれば````uvicorn run:app````した方のコンソール画面に
 
-````title='russia vs ukuraina' article='戦っている' tags=['ロシア', 'ウクライナ', '戦争'] comment=False timestamp=datetime.date(2022, 6, 12)````
+````title='russia vs ukuraina' article='戦っている' tags=['ロシア', 'ウクライナ', '戦争'] comment=False timestamp=datetime.date(2022, 6, 12) source='TV' parent=12````
 
 と出ます
 
@@ -51,7 +62,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukurain
 ````
 が出てきて，GETの返り値が
 ````
-[{"id":"テストid","tiele":"テストタイトル","article":"テスト記事の中身","comment":"True","date":"2022-08-12","tags":["タグテスト1","タグテスト2","タグテスト3"],"source":"テストソース"}]
+[{"id":"テストid","title":"テストタイトル","article":"テスト記事の中身","comment":"True","date":"2022-08-12","tags":["タグテスト1","タグテスト2","タグテスト3"],"source":"テストソース"}]
 ````
 
 のような該当する記事のリストの返り値が出てきます．記事のパラメータは以下のようなものになります．
