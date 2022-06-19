@@ -4,7 +4,7 @@ WORKDIR /usr/src/server
 ADD requirements.txt .
 RUN pip install -r requirements.txt
 # waitライブラリの追加
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.0.0/wait /wait
 # ライブラリの権限変更
 RUN chmod +x /wait
 
