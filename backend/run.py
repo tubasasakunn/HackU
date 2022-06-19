@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"]       
 )
 
-col=['id','title','article','comment','date','source']
+col=['id','title','article','comment','date','source','outline']
 
 class Tag(BaseModel):
     name: str
@@ -42,7 +42,7 @@ async def create_item(tag: Tag):
 
 @app.post("/articles/")
 async def create_item(article: Article):
-    id=ad.set_articles(article.title,article.article,article.comment,article.timestamp,article.source)
+    id=ad.set_articles(article.title,article.article,article.comment,article.timestamp,article.source,article.outline)
     for tag in article.tags:
         ad.set_tags(article.outline,tag,id)
     ad.set_relations(article.parent,id)
@@ -65,9 +65,10 @@ async def read_item(id:int=None,tag: str=None,comment: bool=None, year: int = No
     
     if not tag==None:
         tags=ad.get_tags(name=tag)
-        ids=[i[2] for i in tags]
+        ids=[i[0] for i in tags]
     else:
         ids=None
+    print(ids)
 
     articles=pd.DataFrame(ad.get_articles_byid(ids),columns=col)
 
