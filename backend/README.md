@@ -19,38 +19,38 @@ MySQLをインストールし，host,user,passwdをconfig.ymlに記述する．
 
 # 各API
 ## タグの追加
-````POST http://127.0.0.1:8000/tag/````でリクエストボディに{"name":タグ名}で追加可能.
+````POST http://127.0.0.1:8000/tag/````でリクエストボディに{"name":タグ名,"outline":大枠}で追加可能.
 
 使用例
 
 ````
-curl -X POST -H "Content-Type: application/json" -d '{"name":"ロシア"}' http://127.0.0.1:8000/tags/
+curl -X POST -H "Content-Type: application/json" -d '{"name":"ロシア","outline":"外交"}' http://127.0.0.1:8000/tags/
 ````
 
-成功していれば````uvicorn run:app````した方のコンソール画面に````name='ロシア'````と出ます
+成功していれば````uvicorn run:app````した方のコンソール画面に````name='ロシア',outline='外交' ````と出ます
 
 ## 記事の追加
 
-````POST http://127.0.0.1:8000/articles/````でリクエストボディに{"title":タイトル,"article":記事本文,"tags":タグのリスト,"comment":コメントかどうかのフラグ,"timestamp":日付(yyyy-mm-dd),"source":ソース名,"parent":親の記事id}で追加可能.
+````POST http://127.0.0.1:8000/articles/````でリクエストボディに{"title":タイトル,"article":記事本文,"tags":タグのリスト,"comment":コメントかどうかのフラグ,"timestamp":日付(yyyy-mm-dd),"source":ソース名,"parent":親の記事id,"outline":記事の大枠}で追加可能.
 
 使用例
 
 ````
-curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukuraina","article":"戦っている","tags":["ロシア","ウクライナ","戦争"],"comment":"False","timestamp":"2022-06-12","source":"TV","parent":12}' http://127.0.0.1:8000/articles/
+curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukuraina","article":"戦っている","tags":["ロシア","ウクライナ","戦争"],"comment":"False","timestamp":"2022-06-12","source":"TV","parent":12,"outline":"外交"}' http://127.0.0.1:8000/articles/
 ````
 
 成功していれば````uvicorn run:app````した方のコンソール画面に
 
-````title='russia vs ukuraina' article='戦っている' tags=['ロシア', 'ウクライナ', '戦争'] comment=False timestamp=datetime.date(2022, 6, 12) source='TV' parent=12````
+````title='russia vs ukuraina' article='戦っている' tags=['ロシア', 'ウクライナ', '戦争'] outline='外交' comment=False timestamp=datetime.date(2022, 6, 12) source='TV' parent=12````
 
 と出ます
 
 ## 記事の取り出し
-````GET http://127.0.0.1:8000/articles/````でクエリパラメータに{タグ名，コメントかどうかのフラグ，年，月，日}で該当記事を取り出せます(必ずしも全ての指定をする必要性はありません)
+````GET http://127.0.0.1:8000/articles/````でクエリパラメータに{記事id,タグ名，コメントかどうかのフラグ，年，月，日}で該当記事を取り出せます(必ずしも全ての指定をする必要性はありません)
 
 使用例
 
-````curl 'http://127.0.0.1:8000/articles/?tag=russia&comment=False&year=2022&month=8&day=12'````
+````curl 'http://127.0.0.1:8000/articles/?tag=russia&comment=False&year=2022&month=8&day=12&id=12'````
 
 成功していれば````uvicorn run:app````した方のコンソール画面に
 
@@ -86,6 +86,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukurain
 ````{"tags":["タグテスト1","タグテスト2","タグテスト3"]}````
 
 のようなタグのリストが出てきます．
+
+またクエリパラメータにoutlineを追加することで大枠のなかのタグ一覧が取り出せます
+使用例
+
+````curl 'http://127.0.0.1:8000/tags/?outline=xxx' ````
+
+成功していればGETの返り値に
+
+````{"tags":["タグテスト1","タグテスト2","タグテスト3"]}````
+
 
 ## 記事の親子関係の取り出し
 ````GET http://127.0.0.1:8000/articles/relations/````でクエリパラメータに記事のid(主キー)を加え，その記事の親子関係を取り出せます．

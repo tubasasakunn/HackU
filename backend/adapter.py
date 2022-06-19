@@ -13,6 +13,7 @@ tables={'articles':"CREATE TABLE IF NOT EXISTS %s.articles(id INT(11) AUTO_INCRE
                     "source VARCHAR(30) NOT NULL, "\
                     "PRIMARY KEY (id))"%db_name,\
         'tags':"CREATE TABLE IF NOT EXISTS %s.tags(id INT(11) AUTO_INCREMENT NOT NULL,"\
+                    "outline VARCHAR(30) NOT NULL, "\
                     "name VARCHAR(30) NOT NULL, "\
                     "articles_id INT(11) NOT NULL,"\
                     "PRIMARY KEY (id))"%db_name,\
@@ -62,12 +63,12 @@ class Adapter:
         cursor.execute(command)
         return cursor.fetchall()[0][0]
 
-    def set_tags(self,name,articles_id):
+    def set_tags(self,outline,name,articles_id):
         #つなぐ
         connection =connect()
         cursor=connection.cursor()
 
-        command="insert into hacku.tags values (0,'%s',%d);"%(name,articles_id)
+        command="insert into hacku.tags values (0,'%s','%s',%d);"%(outline,name,articles_id)
         cursor.execute(command)
         connection.commit()
         command="SELECT last_insert_id() FROM hacku.tags;"
@@ -114,7 +115,7 @@ class Adapter:
         cursor.execute(command)
         return cursor.fetchall()
 
-    def get_tags(self,id=None,name=None,articles_id=None):
+    def get_tags(self,outline=None,id=None,name=None,articles_id=None):
         #つなぐ
         connection =connect()
         cursor=connection.cursor()
@@ -122,6 +123,8 @@ class Adapter:
         command="SELECT * FROM hacku.tags WHERE "
         if not id==None:
             command=command+"id=%d and "%id
+        if not outline==None:
+            command=command+"outline='%s' and "%outline
         if not name==None:
             command=command+"name='%s' and "%name
         if not articles_id==None:
@@ -151,12 +154,27 @@ class Adapter:
         cursor.execute(command)
         return cursor.fetchall()
 
-    def get_all_tagname(self):
+    def get_all_tagname(self,outline=None,id=None,name=None,articles_id=None):
         #つなぐ
         connection =connect()
         cursor=connection.cursor()
 
-        command="SELECT DISTINCT name from hacku.tags;"
+        command=""
+
+        if not id==None:
+            command=command+"id=%d and "%id
+        if not outline==None:
+            command=command+"outline='%s' and "%outline
+        if not name==None:
+            command=command+"name='%s' and "%name
+        if not articles_id==None:
+            command=command+"articles_id=%d and "%articles_id
+
+        if command=="":
+            command="SELECT DISTINCT name from hacku.tags;"
+        else:
+            command="SELECT DISTINCT name from hacku.tags"+" WHERE "+command[:-4]
+
         print(command)
         cursor.execute(command)
         return cursor.fetchall()
@@ -208,6 +226,9 @@ if __name__ == '__main__' :
         title=randomname(random.randint(5, 15))
         article=randomname(random.randint(15, 20))
         tag=randomname(random.randint(3, 7))
+        random.seed((random.randint(1, 3)))
+        outline=randomname(random.randint(3, 7))
+        random.seed(num)
         source=randomname(random.randint(2, 6))
         year=random.randint(2000, 2020)
         month=random.randint(1, 12)
@@ -221,12 +242,12 @@ if __name__ == '__main__' :
             parent=None
         else:
             parent=random.randint(1,id-1)
-        ad.set_tags(tag,id)
+        ad.set_tags(outline,tag,id)
         ad.set_relations(parent,id)
 
         if random.random()<0.2:
             article_list=[title,article,comment,dt.strftime('%Y-%m-%d'),source]
-            tags_list=[tag,id]
+            tags_list=[outline,tag,id]
             relation_list=[parent,id]
 
     for i in range(get_num):
@@ -242,7 +263,7 @@ if __name__ == '__main__' :
         for j in range(len(tags_list_tmp)):
             if random.random() < 0.5:
                 tags_list_tmp[j]=None
-        s=ad.get_tags(id=None,name=tags_list_tmp[0],articles_id=tags_list_tmp[1])
+        s=ad.get_tags(id=None,outline=tags_list_tmp[0],name=tags_list_tmp[1],articles_id=tags_list_tmp[2])
         print('get_tags',s)
 
     
