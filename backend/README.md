@@ -114,7 +114,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"title":"russia vs ukurain
 またクエリパラメータにタグ名を追加することでタグの大枠が取り出せます
 使用例
 
-````curl 'http://127.0.0.1:8000//outlines/?name=xxx' ````
+````curl 'http://127.0.0.1:8000/outlines/?name=xxx' ````
 
 成功していればGETの返り値に
 
