@@ -179,6 +179,31 @@ class Adapter:
         cursor.execute(command)
         return cursor.fetchall()
 
+    def get_all_outlinename(self,outline=None,id=None,name=None,articles_id=None):
+        #つなぐ
+        connection =connect()
+        cursor=connection.cursor()
+
+        command=""
+
+        if not id==None:
+            command=command+"id=%d and "%id
+        if not outline==None:
+            command=command+"outline='%s' and "%outline
+        if not name==None:
+            command=command+"name='%s' and "%name
+        if not articles_id==None:
+            command=command+"articles_id=%d and "%articles_id
+
+        if command=="":
+            command="SELECT DISTINCT outline from hacku.tags;"
+        else:
+            command="SELECT DISTINCT outline from hacku.tags"+" WHERE "+command[:-4]
+
+        print(command)
+        cursor.execute(command)
+        return cursor.fetchall()
+
     def get_articles_byid(self,ids=None):
         #つなぐ
         connection =connect()

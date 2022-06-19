@@ -101,6 +101,15 @@ async def read_item(outline:str=None):
     res['tags']=tags
     return res
 
+@app.get("/outlines/")
+async def read_item(name:str=None):
+    tags=ad.get_all_outlinename(name=name)
+    tags=[i[0] for i in tags]
+
+    res={}
+    res['outlines']=tags
+    return res
+
 
 @app.get("/articles/relations/")
 async def read_item(id: int=2):
