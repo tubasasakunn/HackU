@@ -16,10 +16,10 @@ services:
     command: --port 3306
     tty: true
 
-  api:
+  backend:
     depends_on:
       - db
-    container_name: "bakcend"
+    container_name: "backend"
     build: ./backend
     ports:
       - "8000:8000"

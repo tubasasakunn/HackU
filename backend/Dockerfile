@@ -9,4 +9,4 @@ ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.0.0/wait
 RUN chmod +x /wait
 
 # CMD ["/wait", "&&", "uvicorn", "run:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
-CMD /wait && uvicorn run:app --reload --host 0.0.0.0 --port 8000
+CMD /wait && python adapter.py && uvicorn run:app --reload --host 0.0.0.0 --port 8000
