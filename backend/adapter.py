@@ -11,6 +11,7 @@ tables={'articles':"CREATE TABLE IF NOT EXISTS %s.articles(id INT(11) AUTO_INCRE
                     "comment BOOLEAN NOT NULL,"\
                     "date DATE NOT NULL,"\
                     "source VARCHAR(30) NOT NULL, "\
+                    "outline VARCHAR(30) NOT NULL, "\
                     "PRIMARY KEY (id))"%db_name,\
         'tags':"CREATE TABLE IF NOT EXISTS %s.tags(id INT(11) AUTO_INCREMENT NOT NULL,"\
                     "outline VARCHAR(30) NOT NULL, "\
@@ -51,12 +52,12 @@ class Adapter:
         for command in tables.values():
             cursor.execute(command)
 
-    def set_articles(self,title,article,comment,date,source):
+    def set_articles(self,title,article,comment,date,source,outline):
         #つなぐ
         connection =connect()
         cursor=connection.cursor()
 
-        command="insert into hacku.articles values (0,'%s','%s',%d,'%s','%s');"%(title,article,comment,date,source)
+        command="insert into hacku.articles values (0,'%s','%s',%d,'%s','%s','%s');"%(title,article,comment,date,source,outline)
         cursor.execute(command)
         connection.commit()
         command="SELECT last_insert_id() FROM hacku.articles;"
@@ -90,7 +91,7 @@ class Adapter:
         cursor.execute(command)
         return cursor.fetchall()[0][0]
 
-    def get_articles(self,id=None,title=None,article=None,comment=None,date=None,source=None):
+    def get_articles(self,id=None,title=None,article=None,comment=None,date=None,source=None,outline=None):
         #つなぐ
         connection =connect()
         cursor=connection.cursor()
@@ -108,6 +109,8 @@ class Adapter:
             command=command+"date='%s' and "%date
         if not source==None:
             command=command+"source='%s' and "%source
+        if not outline==None:
+            command=command+"outline='%s' and "%outline
 
         command=command[:-4]+";"
 
@@ -262,7 +265,7 @@ if __name__ == '__main__' :
         comment=random.randint(0, 1)
 
         
-        id=ad.set_articles(title,article,comment,dt.strftime('%Y-%m-%d'),source)
+        id=ad.set_articles(title,article,comment,dt.strftime('%Y-%m-%d'),source,outline)
         if id==1:
             parent=None
         else:
@@ -271,7 +274,7 @@ if __name__ == '__main__' :
         ad.set_relations(parent,id)
 
         if random.random()<0.2:
-            article_list=[title,article,comment,dt.strftime('%Y-%m-%d'),source]
+            article_list=[title,article,comment,dt.strftime('%Y-%m-%d'),source,outline]
             tags_list=[outline,tag,id]
             relation_list=[parent,id]
 
@@ -280,7 +283,7 @@ if __name__ == '__main__' :
         for j in range(len(article_list_tmp)):
             if random.random() < 0.5:
                 article_list_tmp[j]=None
-        s=ad.get_articles(id=None,title=article_list_tmp[0],article=article_list_tmp[1],comment=article_list_tmp[2],date=article_list_tmp[3],source=article_list_tmp[4])
+        s=ad.get_articles(id=None,title=article_list_tmp[0],article=article_list_tmp[1],comment=article_list_tmp[2],date=article_list_tmp[3],source=article_list_tmp[4],outline=article_list_tmp[5])
         print('get_articles',s)
 
     for i in range(get_num):
