@@ -125,3 +125,47 @@ async def read_item(id: int=2):
     res['parent']=parents
     res['child']=childs
     return res
+
+@app.get("/articles/relation_articles/")
+async def read_item(id: int=2):
+    print('id',id)
+
+    parents_id=ad.get_relations(child=id)[0][1]
+
+
+    bro_ids=ad.get_relations(parent=parents_id)
+    bro_ids=[i[2] for i in bro_ids]
+    bro_ids.remove(id)
+    print(bro_ids)
+    bros=[]
+    for id_i in bro_ids:
+        bros.append(dict(zip(col,ad.get_articles(id=id_i)[0])))
+    
+
+    parents_ids=[parents_id]
+    while parents_id!=0:
+        if len(ad.get_relations(child=parents_id))==0:
+            break
+        parents_id=ad.get_relations(child=parents_id)[0][1]
+        parents_ids.append(parents_id)
+
+    parents=[]
+    for id_i in parents_ids:
+        parents.append(dict(zip(col,ad.get_articles(id=id_i)[0])))
+
+    child_ids=ad.get_relations(parent=id)
+    child_ids=[i[2] for i in child_ids]
+    childs=[]
+    for id_i in child_ids:
+        childs.append(dict(zip(col,ad.get_articles(id=id_i)[0])))
+    
+    self=[]
+    for id_i in [id]:
+        self.append(dict(zip(col,ad.get_articles(id=id_i)[0])))
+
+    res={}
+    res['parent']=parents
+    res['child']=childs
+    res['bros']=bros
+    res['self']=self
+    return res
