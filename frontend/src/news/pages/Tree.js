@@ -72,7 +72,7 @@ export const Tree = () => {
 
   const onClick = () => {
     console.log(count)
-    delay(150).then(() =>
+    delay(500).then(() =>
     setCount(count => count + 1)
     );
     
