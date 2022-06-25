@@ -134,19 +134,19 @@ async def read_item(id: int=2):
     if len(data)>0:
         parents_id=data[0][1]
     else:
-        parents_id=-1
+        parents_id=0
 
-
-    bro_ids=ad.get_relations(parent=parents_id)
-    bro_ids=[i[2] for i in bro_ids]
-    if id in bro_ids:
-        bro_ids.remove(id)
-    print(bro_ids)
     bros=[]
-    for id_i in bro_ids:
-        data=ad.get_articles(id=id_i)
-        if len(data) > 0:
-            bros.append(dict(zip(col,data[0])))
+    if parents_id!=0:
+        bro_ids=ad.get_relations(parent=parents_id)
+        bro_ids=[i[2] for i in bro_ids]
+        if id in bro_ids:
+            bro_ids.remove(id)
+        print(bro_ids)
+        for id_i in bro_ids:
+            data=ad.get_articles(id=id_i)
+            if len(data) > 0:
+                bros.append(dict(zip(col,data[0])))
     
 
     parents_ids=[parents_id]
