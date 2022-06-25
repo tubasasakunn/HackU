@@ -173,7 +173,7 @@ export const Tree = () => {
         headSize={count}
       />
   )
-})};
+})}
 
     </div>
   );
