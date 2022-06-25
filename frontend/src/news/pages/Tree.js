@@ -56,7 +56,9 @@ export const Tree = () => {
 
   const arrow_list=[]
   let start,end
-  start = parent[0].id
+  if(parent.length>0){
+    start = parent[0].id
+  }
   let i=0
   for (const elem of parent.slice(1)) {
     end=elem.id
@@ -76,7 +78,8 @@ export const Tree = () => {
     
   };
 
-  start = parent[parent.length - 1].id
+  if(parent.length>0){
+    start = parent[parent.length - 1].id
   for (const elem of bros) {
     end=elem.id
     arrow_list.push({"start":String(start),"end":String(end),"startAnchor": {position: "buttom", offset: { x: -100 }},"endAnchor":"left"})
@@ -88,6 +91,7 @@ export const Tree = () => {
     end=elem.id
     arrow_list.push({"start":String(start),"end":String(end),"startAnchor": {position: "buttom", offset: { x: -100 }},"endAnchor":"left"})
   }
+}
   
   start=self[0].id
   for (const elem of child) {
