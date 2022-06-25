@@ -10,7 +10,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ConnectedTvOutlined, ControlPointDuplicateOutlined } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-
+import ReactMarkdown from 'react-markdown'
+import ReactDom from 'react-dom'
+const path="../tree/"
 
 export class TreeArticleContent extends React.Component {
     constructor(props){
@@ -103,7 +105,12 @@ export class TreeArticleContent extends React.Component {
               sx={this.state.titlebackgroundColor}
               id={String(this.state.id)+"top"}  
             >
-              <Typography color={this.state.titlecolor} >{this.state.title}</Typography>
+              <Typography color={this.state.titlecolor} >
+                
+                <a href={path+String(this.state.id)}>
+                {this.state.title}
+                </a>
+                </Typography>
             </AccordionSummary>
 
             <AccordionDetails
@@ -111,7 +118,8 @@ export class TreeArticleContent extends React.Component {
               id={String(this.state.id)+"buttom"}  
             >
               <Typography color={this.state.articlecolor}>
-              {this.state.article}
+              <ReactMarkdown>{this.state.article}</ReactMarkdown>
+              
               </Typography>
             </AccordionDetails>
 
