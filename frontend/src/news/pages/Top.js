@@ -21,7 +21,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export const Top = () => {
   const { selectedTag } = useContext(SelectedTagContext);
-
+  console.log(selectedTag);
   const [outlineIndex, setOutlineIndex] = useState();
   const [boxState, setBoxState] = useState("none");
 
@@ -46,19 +46,29 @@ export const Top = () => {
     setArticleType(event.target.value);
   };
 
-  const apiUrl = (articleType) => {
-    const defaultUrl = `http://127.0.0.1:8000/articles/?tag=${selectedTag}`;
-    if (articleType == "all") {
-      return(defaultUrl);
-    }else if (articleType == "fact") {
-      return(defaultUrl+"&comment=False");
+  const apiUrl = (articleType, selectedTag) => {
+    const defaultUrl = "http://127.0.0.1:8000/articles/";
+    if (selectedTag == "") {
+      if (articleType == "all") {
+        return(defaultUrl);
+      }else if (articleType == "fact") {
+        return(defaultUrl+"?comment=False");
+      }else {
+        return(defaultUrl+"?comment=True");
+      }
     }else {
-      return(defaultUrl+"&comment=True");
+      if (articleType == "all") {
+        return(defaultUrl+`?tag=${selectedTag}`);
+      }else if (articleType == "fact") {
+        return(defaultUrl+`?tag=${selectedTag}&comment=False`);
+      }else {
+        return(defaultUrl+`?tag=${selectedTag}&comment=True`);
+      }
     }
   };
 
   const [{ data, error, loading }] = useAxios({
-    url: apiUrl(articleType),
+    url: apiUrl(articleType, selectedTag),
     method: api.getArticles.method,
   });
   if (loading || !data) return <h1>loading...</h1>;

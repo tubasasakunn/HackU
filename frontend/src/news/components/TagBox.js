@@ -23,7 +23,12 @@ export const TagBox = (props) => {
   const {selectedTag, setSelectedTag} = useContext(SelectedTagContext);
 
   const clickTag = (tag) => {
-    setSelectedTag(tag);
+    if (selectedTag == tag) {
+      setSelectedTag("");
+    } else {
+      setSelectedTag(tag);
+    }
+
   }
 
   const [newTag, setNewTag] = useState("");

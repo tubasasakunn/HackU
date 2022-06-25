@@ -4,7 +4,7 @@ export const SelectedTagContext = createContext({});
 
 export const SelectedTagProvider = (props) => {
     const { children } = props;
-    const [selectedTag, setSelectedTag] = useState("a");
+    const [selectedTag, setSelectedTag] = useState("");
     return(
         <SelectedTagContext.Provider value={{selectedTag, setSelectedTag}}>
             { children }
