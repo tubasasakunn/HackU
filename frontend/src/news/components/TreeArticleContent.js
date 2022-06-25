@@ -7,7 +7,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ConnectedTvOutlined } from '@mui/icons-material';
+import { ConnectedTvOutlined, ControlPointDuplicateOutlined } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
@@ -15,7 +15,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 export class TreeArticleContent extends React.Component {
     constructor(props){
         super(props);
-        console.log(props)
         let rate,defaultExpanded
         switch (props.class){
           case 'parent':
@@ -39,17 +38,25 @@ export class TreeArticleContent extends React.Component {
             defaultExpanded=false
         }
 
-        let color,backgroundColor
+        let titlecolor,titlebackgroundColor,articlecolor,articlebackgroundColor
         if (props.comment){
-          backgroundColor={
-            backgroundColor:'#42a5f5'
+          titlebackgroundColor={
+            backgroundColor:'#a4bbf3'
           }
-          color='black'
+          articlebackgroundColor={
+            backgroundColor:'#bbccf6'
+          }
+          titlecolor='black'
+          articlecolor='black'
         }else{
-          backgroundColor={
-            backgroundColor:'#ba68c8'
+          titlebackgroundColor={
+            backgroundColor:'#a9afbd'
           }
-          color='white'
+          articlebackgroundColor={
+            backgroundColor:'#bfc3ce'
+          }
+          titlecolor='black'
+          articlecolor='black'
         }
 
 
@@ -70,37 +77,45 @@ export class TreeArticleContent extends React.Component {
             title:props.title,
             class:props.class,
             sx:sx,
-            backgroundColor:backgroundColor,
-            color:color,
-            defaultExpanded:defaultExpanded
+            titlebackgroundColor:titlebackgroundColor,
+            titlecolor:titlecolor,
+            articlebackgroundColor:articlebackgroundColor,
+            articlecolor:articlecolor,
+            defaultExpanded:defaultExpanded,
+            id:props.id,
+            onClick:props.onClick
         }
+        console.log(props.onClick)
     }
 
 //    <Accordion className={this.state.calss}}>
     render() {
       return (
-        
           <Accordion 
-          defaultExpanded={this.state.defaultExpanded}>
+          defaultExpanded={this.state.defaultExpanded}
+          id={String(this.state.id)} 
+          onChange = {this.state.onClick}
+          
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
-              id="panel1a-header"    
-              sx={this.state.backgroundColor}
+              sx={this.state.titlebackgroundColor}
+              id={String(this.state.id)+"top"}  
             >
-              <Typography color={this.state.color} >{this.state.title}</Typography>
+              <Typography color={this.state.titlecolor} >{this.state.title}</Typography>
             </AccordionSummary>
 
             <AccordionDetails
-              sx={this.state.backgroundColor}
+              sx={this.state.articlebackgroundColor}
+              id={String(this.state.id)+"buttom"}  
             >
-              <Typography color={this.state.color}>
+              <Typography color={this.state.articlecolor}>
               {this.state.article}
               </Typography>
             </AccordionDetails>
 
           </Accordion>
-
         
       
       );

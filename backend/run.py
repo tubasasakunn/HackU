@@ -152,6 +152,7 @@ async def read_item(id: int=2):
     parents=[]
     for id_i in parents_ids:
         parents.append(dict(zip(col,ad.get_articles(id=id_i)[0])))
+    parents.reverse()
 
     child_ids=ad.get_relations(parent=id)
     child_ids=[i[2] for i in child_ids]
