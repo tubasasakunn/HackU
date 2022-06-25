@@ -24,6 +24,7 @@ if __name__ == '__main__' :
             data=dict(zip(col,row))
             if data["title"]=='':
                 break
+            
             try:
                 set(data["title"],data["article"],int(data["comment"]),data["timestamp"],data["source"],data["outline"],ast.literal_eval(data["tags"]),int(data["parent"]))
             except:
