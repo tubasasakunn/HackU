@@ -69,8 +69,6 @@ async def read_item(id:int=None,tag: str=None,comment: bool=None, year: int = No
     else:
         ids=None
     print(ids)
-    if len(ids)==0:
-        return []
 
     articles=pd.DataFrame(ad.get_articles_byid(ids),columns=col)
 
@@ -126,63 +124,4 @@ async def read_item(id: int=2):
     res={}
     res['parent']=parents
     res['child']=childs
-    return res
-
-@app.get("/articles/relation_articles/")
-async def read_item(id: int=2):
-    print('id',id)
-
-    data=ad.get_relations(child=id)
-    if len(data)>0:
-        parents_id=data[0][1]
-    else:
-        parents_id=0
-
-    bros=[]
-    if parents_id!=0:
-        bro_ids=ad.get_relations(parent=parents_id)
-        bro_ids=[i[2] for i in bro_ids]
-        if id in bro_ids:
-            bro_ids.remove(id)
-        print(bro_ids)
-        for id_i in bro_ids:
-            data=ad.get_articles(id=id_i)
-            if len(data) > 0:
-                bros.append(dict(zip(col,data[0])))
-    
-
-    parents_ids=[parents_id]
-    while parents_id!=0:
-        if len(ad.get_relations(child=parents_id))==0:
-            break
-        parents_id=ad.get_relations(child=parents_id)[0][1]
-        parents_ids.append(parents_id)
-
-    parents=[]
-    for id_i in parents_ids:
-        data=ad.get_articles(id=id_i)
-        if len(data) > 0:
-            parents.append(dict(zip(col,data[0])))
-    parents.reverse()
-
-    child_ids=ad.get_relations(parent=id)
-    child_ids=[i[2] for i in child_ids]
-    childs=[]
-    for id_i in child_ids:
-        data=ad.get_articles(id=id_i)
-        if len(data) > 0:
-            childs.append(dict(zip(col,data[0])))
-    
-    self=[]
-    for id_i in [id]:
-        data=ad.get_articles(id=id_i)
-        if len(data) > 0:
-            self.append(dict(zip(col,data[0])))
-
-    res={}
-    res['parent']=parents
-    res['child']=childs
-    res['bros']=bros
-    res['self']=self
-    print(res)
     return res
