@@ -1,4 +1,4 @@
 MySQL:
- host: db
+ host: localhost
  user: hackU
  passwd: hackU
