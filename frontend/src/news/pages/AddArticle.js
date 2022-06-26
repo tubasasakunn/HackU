@@ -22,17 +22,25 @@ export const AddArticle = () => {
     }
   );
 
+  /* 大枠選択用に大枠一覧を取得　*/
+  const [
+    { data: outlines, error: outlineGetError, loading: outlineGetLoading },
+  ] = useAxios({
+    url: api.getOutlines.url(),
+    method: api.getOutlines.method,
+  });
+
   const [{ data }, postData] = useAxios(
     { method: api.postArticle.method },
     { manulal: true }
   );
 
-  if (tagGetLoading || !tags) return <h1>loading...</h1>;
-  if (tagGetError) return <h1>Error!</h1>;
+  if (tagGetLoading || outlineGetLoading || !tags || !outlines)
+    return <h1>loading...</h1>;
+  if (tagGetError || outlineGetError) return <h1>Error!</h1>;
 
   const onSubmit = (formData) => {
     formData.tags = formData.tags.filter(Boolean);
-    console.log(3);
     console.log(formData);
     postData({
       url: api.postArticle.url(),
@@ -75,6 +83,13 @@ export const AddArticle = () => {
             </label>
           );
         })}
+        <p>大枠</p>
+        <select {...register("outline")}>
+          {outlines.outlines.map((outline) => {
+            return <option value={outline}>{outline}</option>;
+          })}
+        </select>
+        {errors.outline && <span>Outlines is required</span>}
         <p>コメント</p>
         <input type="checkbox" {...register("comment")} />
         <p>ソース</p>
