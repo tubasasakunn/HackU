@@ -8,11 +8,7 @@ export const AddTag = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({
-    mode: "onChange", // フォーム入力時にバリデーションを実行する
-    criteriaMode: "all", // 全てのエラーを表示
-    shoudleFocusErro: "false;", // Validationに失敗したところにフォーカスが移動しない
-  });
+  } = useForm();
 
   const [{ data }, postData] = useAxios(
     { method: api.postTag.method },
@@ -35,15 +31,9 @@ export const AddTag = () => {
       <h1>タグを追加</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         タグ名
-        <br />
         <input {...register("name", { required: true })} />
-        {errors.name && <span>Name is required</span>}
-        <br />
-        大枠
-        <br />
-        <input {...register("outline", { required: true })} />
-        {errors.outline && <span>outline is required</span>}
-        <br />
+        {/* エラーハンドリング */}
+        {errors.exampleRequired && <span>This field is required</span>}
         <input type="submit" />
       </form>
     </div>

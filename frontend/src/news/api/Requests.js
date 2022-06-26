@@ -5,13 +5,8 @@ const api = {
     url: (q) => `${baseURL}/articles/?${q}`,
     method: "GET",
   },
-  getTags: { url: () => `${baseURL}/tags`, method: "GET" },
-  getOutlines: { url: () => `${baseURL}/outlines`, method: "GET" },
-  getTagsFromQuery: {
-    url: (q) => `${baseURL}/tags/?${q}`,
-    method: "GET",
-  },
   postArticle: { url: () => `${baseURL}/articles`, method: "POST" },
+  getTags: { url: () => `${baseURL}/tags`, method: "GET" },
   postTag: { url: () => `${baseURL}/tags`, method: "POST" },
 };
 

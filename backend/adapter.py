@@ -6,8 +6,8 @@ import yaml
 
 db_name='hacku'
 tables={'articles':"CREATE TABLE IF NOT EXISTS %s.articles(id INT(11) AUTO_INCREMENT NOT NULL,"\
-                    "title VARCHAR(30) NOT NULL, "\
-                    "article VARCHAR(300) NOT NULL,"\
+                    "title VARCHAR(300) NOT NULL, "\
+                    "article VARCHAR(3000) NOT NULL,"\
                     "comment BOOLEAN NOT NULL,"\
                     "date DATE NOT NULL,"\
                     "source VARCHAR(30) NOT NULL, "\
@@ -57,8 +57,8 @@ class Adapter:
         connection =connect()
         cursor=connection.cursor()
 
-        command="insert into hacku.articles values (0,'%s','%s',%d,'%s','%s','%s');"%(title,article,comment,date,source,outline)
-        cursor.execute(command)
+        command="insert into hacku.articles values (0,%s,%s,%s,%s,%s,%s);"
+        cursor.execute(command,(title,article,comment,date,source,outline))
         connection.commit()
         command="SELECT last_insert_id() FROM hacku.articles;"
         cursor.execute(command)
@@ -69,8 +69,8 @@ class Adapter:
         connection =connect()
         cursor=connection.cursor()
 
-        command="insert into hacku.tags values (0,'%s','%s',%d);"%(outline,name,articles_id)
-        cursor.execute(command)
+        command="insert into hacku.tags values (0,%s,%s,%s);"
+        cursor.execute(command,(outline,name,articles_id))
         connection.commit()
         command="SELECT last_insert_id() FROM hacku.tags;"
         cursor.execute(command)

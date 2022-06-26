@@ -7,7 +7,7 @@ export const ArticleDetail = () => {
   const query = new URLSearchParams({
     id: id,
   });
-  console.log(api.getArticlesFromQuery.url(query));
+  // console.log(api.getArticlesFromQuery.url(query));
   const [{ data, error, loading }] = useAxios({
     url: api.getArticlesFromQuery.url(query),
     method: api.getArticlesFromQuery.method,
@@ -19,8 +19,8 @@ export const ArticleDetail = () => {
   return (
     <div>
       <h1>記事詳細</h1>
-      {data.map((d) => JSON.stringify(d, null, 1))}
-      {/* {JSON.stringify(data[0], null, 1)} */}
+      {/* {data.map((d) => JSON.stringify(d, null, 1))} */}
+      {JSON.stringify(data[0], null, 1)}
     </div>
   );
 };

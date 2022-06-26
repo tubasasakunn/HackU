@@ -1,7 +1,4 @@
 import { Link } from "react-router-dom";
-import { DialogSample } from "../components/DialogSample";
-import { InputReactHookFormTextField } from "../components/AddArticleForm";
-import { FormDialog } from "../components/FormDialog";
 
 export const Top = () => {
   return (
@@ -21,10 +18,6 @@ export const Top = () => {
           <Link to="/tags">タグ一覧</Link>
         </li>
       </ol>
-      <dir>
-        {/* <DialogSample /> */}
-        <FormDialog />
-      </dir>
     </div>
   );
 };
