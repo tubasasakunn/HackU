@@ -28,7 +28,6 @@ export const TagBox = (props) => {
     } else {
       setSelectedTag(tag);
     }
-
   }
 
   const [newTag, setNewTag] = useState("");

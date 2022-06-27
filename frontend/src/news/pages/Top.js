@@ -21,7 +21,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export const Top = () => {
   const { selectedTag } = useContext(SelectedTagContext);
-  console.log(selectedTag);
+
   const [outlineIndex, setOutlineIndex] = useState();
   const [boxState, setBoxState] = useState("none");
 
@@ -121,7 +121,7 @@ export const Top = () => {
   const tableWrapper = {
     width: "95%",
     margin: "0 auto",
-    marginTop: "20px",
+    paddingTop: "40px"
   }
 
   const tagContainer = {
@@ -174,7 +174,7 @@ export const Top = () => {
         </Link>
       </header>
 
-      <body>
+      <main>
         <div style={tagContainer}>
           <TagBox value={outlineIndex}></TagBox>
         </div>
@@ -197,7 +197,7 @@ export const Top = () => {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      <Link style={articleLink} to={"/articles:" + data.id.toString()}>{data.title}</Link>
+                      <Link style={articleLink} to={"/tree/:" + data.id.toString()}>{data.title}</Link>
                     </TableCell>
                     <TableCell align="right">{data.tags}</TableCell>
                     <TableCell align="right">{getType(data.comment)}</TableCell>
@@ -209,7 +209,7 @@ export const Top = () => {
             </Table>
           </TableContainer>
         </div>
-      </body>
+      </main>
     </>
   );
 };

@@ -22,8 +22,10 @@ header p {
   margin-right: 10px;
 }
 
-body {
+main {
   background-color: rgb(200, 200, 200);
+  padding-bottom: 40px;
+  min-height: 79vh;
 }
 
 code {
