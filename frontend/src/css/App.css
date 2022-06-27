@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+.v_line_fix {
+  margin-left: 100px;
+  width: 5px;
+  height: 150px;
+  background-color: brown;
+}
