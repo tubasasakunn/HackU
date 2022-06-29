@@ -8,55 +8,21 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 
 export const TagBox = (props) => {
-  const [boxState, setBoxState] = useState("none");
-
-  const clickButton = () => {
-    setBoxState(() => {
-      if (boxState == "none") {
-        return("block");
-      }else {
-        return("none");
-      };
-    })
-  };
-
-  const {selectedTag, setSelectedTag} = useContext(SelectedTagContext);
-
-  const clickTag = (tag) => {
-    if (selectedTag == tag) {
-      setSelectedTag("");
-    } else {
-      setSelectedTag(tag);
-    }
-  }
-
+  const { selectedTag, setSelectedTag } = useContext(SelectedTagContext);
+  const [displayInput, setDisplayInput] = useState("none");
   const [newTag, setNewTag] = useState("");
-
-  const handleChange = (event) => {
-    setNewTag(event.target.value);
-  }
+  const [errorMessage, setErrorMessage] = useState("");
+  const [displayError, setDisplayError] = useState("none");
+  const outlines = ["政治", "経済", "スポーツ", "芸能", "エンタメ"];
 
   const apiUrl = (outline) => {
-    return(`http://127.0.0.1:8000/tags/?outline=${outline}`);
-  } 
-
-  const outlines = ["政治", "経済", "スポーツ", "芸能", "エンタメ"];
+    return (`http://127.0.0.1:8000/tags/?outline=${outline}`);
+  }
 
   const [{ newData }, postData] = useAxios(
     { method: api.postTag.method },
     { manulal: true }
   );
-
-  const onSubmit = () => {
-    postData({
-      url: api.postTag.url(),
-      data: {
-        name: newTag,
-        outline: outlines[props.value]
-      },
-    });
-    window.location.reload();
-  };
 
   const [{ data, error, loading }] = useAxios({
     url: apiUrl(outlines[props.value]),
@@ -66,23 +32,65 @@ export const TagBox = (props) => {
   if (loading || !data) return <h1>loading...</h1>;
   if (error) return <h1>Error!</h1>;
 
+  const handleChange = (event) => {
+    setNewTag(event.target.value);
+  }
+
+  const onSubmit = () => {
+    if (newTag == "") {
+      setDisplayError("inline");
+      setErrorMessage("タグ名を入力してください");
+    } else if (data.tags.indexOf(newTag) >= 0) {
+      setDisplayError("inline");
+      setErrorMessage("タグがすでに存在します");
+    } else {
+      setDisplayError("none");
+      postData({
+        url: api.postTag.url(),
+        data: {
+          name: newTag,
+          outline: outlines[props.value]
+        },
+      });
+      window.location.reload();
+    };
+  };
+
+  const clickButton = () => {
+    setDisplayInput(() => {
+      if (displayInput == "none") {
+        return ("block");
+      } else {
+        return ("none");
+      };
+    })
+  };
+
+  const clickTag = (tag) => {
+    if (selectedTag == tag) {
+      setSelectedTag("");
+    } else {
+      setSelectedTag(tag);
+    }
+  }
+
   const getTagColors = () => {
     let colors = [];
-    for (let i=0;i < data.tags.length;i ++) {
+    for (let i = 0; i < data.tags.length; i++) {
       if (data.tags[i] == selectedTag) {
-        colors.push("neutral"); 
-      }else {
-        colors.push("inherit")
+        colors.push("neutral");
+      } else {
+        colors.push("inherit");
       }
     };
     return colors;
   }
 
-  const getColor = (boxState) => {
-    if (boxState == "none") {
-      return("inherit");
-    }else {
-      return("neutral");
+  const getColor = (displayInput) => {
+    if (displayInput == "none") {
+      return ("inherit");
+    } else {
+      return ("neutral");
     }
   };
 
@@ -108,13 +116,19 @@ export const TagBox = (props) => {
   };
 
   const inputBox = {
-    display: boxState,
+    display: displayInput,
     marginTop: "30px"
   };
 
   const fieldStyle = {
     marginRight: "20px",
     width: "200px"
+  };
+
+  const errorStyle = {
+    display: displayError,
+    color: "red",
+    height: "20px"
   };
 
   return (
@@ -124,11 +138,12 @@ export const TagBox = (props) => {
           {data.tags.map((tag) => (
             <Button onClick={() => clickTag(tag)} style={tagStyle} variant="contained" color={getTagColors()[data.tags.indexOf(tag)]}>{tag}</Button>
           ))}
-          <Button onClick={clickButton} style={tagStyle} variant="contained" color={getColor(boxState)}>+新規タグ</Button>
+          <Button onClick={clickButton} style={tagStyle} variant="contained" color={getColor(displayInput)}>+新規タグ</Button>
 
           <div style={inputBox}>
             <TextField value={newTag} onChange={handleChange} style={fieldStyle} color="neutral" size="small" label="タグ名" variant="outlined" />
             <Button onClick={onSubmit} style={tagStyle} variant="contained" color="inherit">送信</Button>
+            <p style={errorStyle}>{errorMessage}</p>
           </div>
         </ThemeProvider>
       </div>

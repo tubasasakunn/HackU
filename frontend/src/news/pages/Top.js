@@ -21,9 +21,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export const Top = () => {
   const { selectedTag } = useContext(SelectedTagContext);
-
   const [outlineIndex, setOutlineIndex] = useState();
   const [boxState, setBoxState] = useState("none");
+  const [articleType, setArticleType] = useState("all");
 
   const clickButton = (clickedIndex) => {
     setBoxState(() => {
@@ -39,8 +39,6 @@ export const Top = () => {
     })
     setOutlineIndex(clickedIndex);
   }
-
-  const [articleType, setArticleType] = useState("all");
 
   const handleChange = (event) => {
     setArticleType(event.target.value);
@@ -197,7 +195,7 @@ export const Top = () => {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      <Link style={articleLink} to={"/tree/:" + data.id.toString()}>{data.title}</Link>
+                      <Link style={articleLink} to={"/tree/" + data.id.toString()}>{data.title}</Link>
                     </TableCell>
                     <TableCell align="right">{data.tags}</TableCell>
                     <TableCell align="right">{getType(data.comment)}</TableCell>

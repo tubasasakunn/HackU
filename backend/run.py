@@ -68,8 +68,7 @@ async def read_item(id:int=None,tag: str=None,comment: bool=None, year: int = No
         ids=[i[0] for i in tags]
     else:
         ids=None
-    print(ids)
-    if len(ids)==0:
+    if ids==[]:
         return []
 
     articles=pd.DataFrame(ad.get_articles_byid(ids),columns=col)
