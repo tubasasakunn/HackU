@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from starlette.middleware.cors import CORSMiddleware 
+from starlette.middleware.cors import CORSMiddleware
 
 import pandas as pd
 import adapter
@@ -11,9 +11,9 @@ ad = adapter.Adapter()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,   
-    allow_methods=["*"],      
-    allow_headers=["*"]       
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
 )
 
 col=['id','title','article','comment','date','source','outline']
@@ -62,14 +62,14 @@ async def read_item(id:int=None,tag: str=None,comment: bool=None, year: int = No
     print('タグ名',tag)
     print('コメントかどうか',comment)
     print('日付',dt)
-    
+
     if not tag==None:
         tags=ad.get_tags(name=tag)
         ids=[i[0] for i in tags]
     else:
         ids=None
     print(ids)
-    if ids == []:
+    if ids==[]:
         return []
 
     articles=pd.DataFrame(ad.get_articles_byid(ids),columns=col)
@@ -149,7 +149,7 @@ async def read_item(id: int=2):
             data=ad.get_articles(id=id_i)
             if len(data) > 0:
                 bros.append(dict(zip(col,data[0])))
-    
+
 
     parents_ids=[parents_id]
     while parents_id!=0:
@@ -172,7 +172,7 @@ async def read_item(id: int=2):
         data=ad.get_articles(id=id_i)
         if len(data) > 0:
             childs.append(dict(zip(col,data[0])))
-    
+
     self=[]
     for id_i in [id]:
         data=ad.get_articles(id=id_i)
