@@ -7,6 +7,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+header {
+  background-color: rgb(250, 250, 250);
+  padding: 20px;
+}
+
+header h1 {
+  color:black;
+}
+
+header p {
+  display: inline;
+  margin-left: 20px;
+  margin-right: 10px;
+}
+
+main {
+  background-color: rgb(200, 200, 200);
+  padding-bottom: 40px;
+  min-height: 79vh;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
