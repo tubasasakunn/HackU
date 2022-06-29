@@ -5,6 +5,7 @@ import { useContext } from "react";
 import api from "../api/Requests";
 import { TagBox } from "../components/TagBox"
 import { SelectedTagContext } from "../components/providers/selectedTagProvider";
+import pic from "../../images/logo.png"
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -146,7 +147,7 @@ export const Top = () => {
   return (
     <>
       <header>
-        <h1>News App</h1>
+        <img src={pic} alt="picture" />
         {outlines.map((outline) => (
           <ThemeProvider theme={theme}>
             <Button style={tagStyle} onClick={() => clickButton(outlines.indexOf(outline))} variant="contained" color={outline.color}>{outline.name}</Button>
