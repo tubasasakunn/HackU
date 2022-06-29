@@ -35,7 +35,7 @@ export const MultipleSelectChip = (props) => {
       control={props.control}
       rules={props.rules}
       render={({ field }) => (
-        <FormControl sx={{ m: 1, width: 300 }}>
+        <FormControl fullWidth>
           <InputLabel id="tags-label">Tags</InputLabel>
           <Select
             labelId="tags-label"

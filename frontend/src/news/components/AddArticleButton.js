@@ -25,15 +25,11 @@ export const DialogButton = () => {
         fullWidth
         maxWidth="sm"
       >
-        {/* ダイアログのタイトル */}
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {"記事の追加"}
-        </DialogTitle>
         {/* フォームの中身 */}
         <AddForm handleClose={() => handleClose()} />
-        <DialogActions>
+        {/* <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
     </div>
   );
