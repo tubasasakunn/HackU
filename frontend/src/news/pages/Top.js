@@ -1,112 +1,119 @@
 import { Link } from "react-router-dom";
 import useAxios from "axios-hooks";
-import { useState } from "react";
-import { useContext } from "react";
+import { useState, useEffect } from "react";
 import api from "../api/Requests";
-import { TagBox } from "../components/TagBox"
-import { SelectedTagContext } from "../components/providers/selectedTagProvider";
-import pic from "../../images/logo.png"
-import Button from '@mui/material/Button';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { TagBox } from "../components/TagBox";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { DialogButton } from "../components/AddArticleButton";
+import { Header } from "../components/Header";
 
 export const Top = () => {
-  const { selectedTag } = useContext(SelectedTagContext);
-  const [outlineIndex, setOutlineIndex] = useState();
+  const [selectedTag, setSelectedTag] = useState("");
+  const [selectedOutline, setSelectedOutline] = useState("");
   const [boxState, setBoxState] = useState("none");
   const [articleType, setArticleType] = useState("all");
 
-  const clickButton = (clickedIndex) => {
-    setBoxState(() => {
-      if (clickedIndex == outlineIndex) {
-        if (boxState == "none") {
-          return("block");
-        }else {
-          return("none");
-        }
-      }else {
-        return("block");
-      }
-    })
-    setOutlineIndex(clickedIndex);
-  }
+  const clickButton = (outline) => {
+    if (selectedOutline === outline) {
+      setBoxState("none");
+      setSelectedOutline("");
+    } else {
+      setBoxState("block");
+      setSelectedOutline(outline);
+    }
+  };
 
   const handleChange = (event) => {
     setArticleType(event.target.value);
   };
 
   const apiUrl = (articleType, selectedTag) => {
-    const defaultUrl = "http://127.0.0.1:8000/articles/";
-    if (selectedTag == "") {
-      if (articleType == "all") {
-        return(defaultUrl);
-      }else if (articleType == "fact") {
-        return(defaultUrl+"?comment=False");
-      }else {
-        return(defaultUrl+"?comment=True");
+    console.log(articleType, selectedTag);
+    if (selectedTag === "") {
+      if (articleType === "all") {
+        return "";
+      } else if (articleType === "fact") {
+        return "comment=False";
+      } else {
+        return "comment=True";
       }
-    }else {
-      if (articleType == "all") {
-        return(defaultUrl+`?tag=${selectedTag}`);
-      }else if (articleType == "fact") {
-        return(defaultUrl+`?tag=${selectedTag}&comment=False`);
-      }else {
-        return(defaultUrl+`?tag=${selectedTag}&comment=True`);
+    } else {
+      if (articleType === "all") {
+        return `tag=${selectedTag}`;
+      } else if (articleType === "fact") {
+        return `tag=${selectedTag}&comment=False`;
+      } else {
+        return `tag=${selectedTag}&comment=True`;
       }
     }
   };
+  useEffect(() => {
+    // Update the document title using the browser API
+    refetch();
+  }, [selectedTag]);
 
-  const [{ data, error, loading }] = useAxios({
-    url: apiUrl(articleType, selectedTag),
-    method: api.getArticles.method,
+  const [{ data: articles, error, loading }, refetch] = useAxios({
+    url: api.getArticlesFromQuery.url(apiUrl(articleType, selectedTag)),
+    method: api.getArticlesFromQuery.method,
   });
-  if (loading || !data) return <h1>loading...</h1>;
+  if (loading || !articles) return <h1>loading...</h1>;
   if (error) return <h1>Error!</h1>;
+
+  const selectTag = (tag) => {
+    // console.log(selectedTag, tag);
+    setSelectedTag(tag === selectedTag ? "" : tag);
+  };
+
+  const isSelectedtTag = (tag) => {
+    return selectedTag === tag;
+  };
 
   const getType = (num) => {
     if (num === 0) {
-      return("事実");
-    }else{
-      return("評論");
+      return "事実";
+    } else {
+      return "評論";
     }
   };
 
-  let colors = ["inherit", "inherit", "inherit", "inherit", "inherit"];
-  if (boxState == "block") {
-    colors.splice(outlineIndex, 1, "neutral");
+  const outlines = ["政治", "経済", "スポーツ", "芸能", "エンタメ", "IT"];
+  let colors = [
+    "inherit",
+    "inherit",
+    "inherit",
+    "inherit",
+    "inherit",
+    "inherit",
+  ];
+  if (boxState === "block") {
+    colors.splice(outlines.indexOf(selectedOutline), 1, "neutral");
   }
 
   const theme = createTheme({
     palette: {
       neutral: {
-        main: 'rgb(170, 170, 170)',
-        contrastText: '#fff',
+        main: "rgb(170, 170, 170)",
+        contrastText: "#fff",
       },
     },
   });
 
-  const outlines = [
-    {name: "政治", color: colors[0]},
-    {name: "経済", color: colors[1]},
-    {name: "スポーツ", color: colors[2]},
-    {name: "芸能", color: colors[3]},
-    {name: "エンタメ", color: colors[4]},
-  ];
-
   const radios = [
-    {value: "all", label: "全て"},
-    {value: "fact", label: "事実"},
-    {value: "comment", label: "評論"}
+    { value: "all", label: "全て" },
+    { value: "fact", label: "事実" },
+    { value: "comment", label: "評論" },
   ];
 
   const colomns = ["タグ", "種別", "ソース", "日付"];
@@ -114,71 +121,84 @@ export const Top = () => {
   //css
   const tagStyle = {
     margin: "0 10px",
-    color: "black"
+    color: "black",
   };
 
   const tableWrapper = {
     width: "95%",
     margin: "0 auto",
-    paddingTop: "40px"
-  }
+    paddingTop: "40px",
+  };
 
   const tagContainer = {
     backgroundColor: "rgb(250, 250, 250)",
     display: boxState,
     width: "100%",
-  }
+  };
+
+  const radioButton = {
+    marginLeft: "20px",
+  };
+
+  const articleLink = {
+    color: "black",
+  };
 
   const makeArticle = {
     float: "right",
     color: "black",
-    textDecoration: "none"
-  }
- 
-  const radioButton = {
-    marginLeft: "20px"
-  }
-
-  const articleLink = {
-    color: "black"
-  }
+    textDecoration: "none",
+  };
 
   //出力
   return (
     <>
-      <header>
-        <img src={pic} alt="picture" />
-        {outlines.map((outline) => (
-          <ThemeProvider theme={theme}>
-            <Button style={tagStyle} onClick={() => clickButton(outlines.indexOf(outline))} variant="contained" color={outline.color}>{outline.name}</Button>
-          </ThemeProvider>
-        ))}
-
-        <FormControl style={radioButton}>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-            value={articleType}
-            onChange={handleChange}
+      <Header />
+      {/* <header>
+        <img src={pic} alt="picture" /> */}
+      {outlines.map((outline, idx) => (
+        <ThemeProvider theme={theme}>
+          <Button
+            style={tagStyle}
+            onClick={() => clickButton(outline)}
+            variant="contained"
+            color={colors[idx]}
           >
-            {radios.map((radio) => (
-              <FormControlLabel value={radio.value} control={<Radio color="default"/>} label={radio.label} />
-            ))}
-          </RadioGroup>
-        </FormControl>
-
-        <Link to="/addArticle" style={makeArticle}>
-          <Button style={tagStyle} variant="contained" color="inherit">+記事作成</Button>
-        </Link>
-      </header>
-
+            {outline}
+          </Button>
+        </ThemeProvider>
+      ))}
+      <FormControl style={radioButton}>
+        <RadioGroup
+          row
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          name="row-radio-buttons-group"
+          value={articleType}
+          onChange={handleChange}
+        >
+          {radios.map((radio) => (
+            <FormControlLabel
+              value={radio.value}
+              key={radio.value}
+              control={<Radio color="default" />}
+              label={radio.label}
+            />
+          ))}
+        </RadioGroup>
+      </FormControl>
+      {/* トップページから追加した記事は全て根の記事 */}
+      <DialogButton refetch={refetch} id={0} style={makeArticle} />
+      {/* </header> */}
       <main>
         <div style={tagContainer}>
-          <TagBox value={outlineIndex}></TagBox>
+          <TagBox
+            value={selectedOutline}
+            selectTag={(val) => selectTag(val)}
+            isSelectedTag={(val) => isSelectedtTag(val)}
+          ></TagBox>
         </div>
-      
-        <div style = {tableWrapper}>
+
+        <div style={tableWrapper}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -190,18 +210,25 @@ export const Top = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((data) => (
+                {articles.map((article) => (
                   <TableRow
-                    key={data.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    key={article.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      <Link style={articleLink} to={"/tree/" + data.id.toString()}>{data.title}</Link>
+                      <Link
+                        style={articleLink}
+                        to={"/tree/" + article.id.toString()}
+                      >
+                        {article.title}
+                      </Link>
                     </TableCell>
-                    <TableCell align="right">{data.tags}</TableCell>
-                    <TableCell align="right">{getType(data.comment)}</TableCell>
-                    <TableCell align="right">{data.source}</TableCell>
-                    <TableCell align="right">{data.date}</TableCell>
+                    <TableCell align="right">{article.tags}</TableCell>
+                    <TableCell align="right">
+                      {getType(article.comment)}
+                    </TableCell>
+                    <TableCell align="right">{article.source}</TableCell>
+                    <TableCell align="right">{article.date}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

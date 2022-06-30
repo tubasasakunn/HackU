@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  db:
+    #platform: linux/x86_64 # M1チップ対応のため追記
+    image: mysql:5.7
+    container_name: db
+    env_file:
+      - ./db/.env
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./db/grant.sql:/docker-entrypoint-initdb.d/grant.sql
+    ports:
+      - 3306:3306
+    command: --port 3306
+    tty: true
+
+  backend:
+    depends_on:
+      - db
+    container_name: "backend"
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/usr/src/server
+    environment:
+      WAIT_HOSTS: db:3306

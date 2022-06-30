@@ -1,4 +1,4 @@
 MySQL:
- host: localhost
- user: root
- passwd: plank662
+  host: db
+  user: hackU
+  passwd: hackU
