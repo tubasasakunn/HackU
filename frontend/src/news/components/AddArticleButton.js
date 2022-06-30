@@ -35,12 +35,13 @@ export const DialogButton = (prop) => {
         open={open}
         fullWidth
         maxWidth="sm"
+        onClick={handleClose}
       >
         {/* フォームの中身 */}
-        <AddForm handleClose={() => handleClose()} id={prop.id} />
-        <DialogActions>
+        <AddForm handleClose={handleClose} id={prop.id} />
+        {/* <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
     </div>
   );
