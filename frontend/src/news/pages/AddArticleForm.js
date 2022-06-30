@@ -26,10 +26,9 @@ import {
 
 // import { LockOutlinedIcon } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 const theme = createTheme();
 
-export const AddArticle = () => {
+export const AddArticle = (prop) => {
   /* 初期値*/
   const defaultValues = {
     title: "",
@@ -95,13 +94,13 @@ export const AddArticle = () => {
     // 整形
     // formData.tags = formData.tags.filter(Boolean);
     formData.timestamp = format(formData.timestamp, "yyyy-MM-dd");
-    formData.parent = 1;
+    formData.parent = prop.id;
     console.log(formData.timestamp);
-    postData({
-      url: api.postArticle.url(),
-      data: formData,
-    });
-    // alert(`記事を作成しました\n ${JSON.stringify(formData, null, 1)}  `);
+    // postData({
+    //   url: api.postArticle.url(),
+    //   data: formData,
+    // });
+    alert(`記事を作成しました\n ${JSON.stringify(formData, null, 1)}  `);
   };
 
   return (

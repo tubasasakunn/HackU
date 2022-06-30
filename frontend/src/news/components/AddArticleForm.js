@@ -97,12 +97,15 @@ export const AddForm = (props) => {
     formData.timestamp = format(formData.timestamp, "yyyy-MM-dd");
     formData.parent = 1;
     console.log(formData.timestamp);
-    postData({
-      url: api.postArticle.url(),
-      data: formData,
-    });
-    // alert(`記事を作成しました\n ${JSON.stringify(formData, null, 1)}  `);
-    props.handleClose();
+    const post_reload = async () => {
+      await postData({
+        url: api.postArticle.url(),
+        data: formData,
+      });
+      // alert(`記事を作成しました\n ${JSON.stringify(formData, null, 1)}  `);
+      await props.handleClose();
+    };
+    post_reload();
   };
 
   return (

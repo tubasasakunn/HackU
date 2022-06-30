@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AddForm } from "./AddArticleForm";
 import { Button, Dialog, DialogTitle, DialogActions } from "@mui/material/";
 
-export const DialogButton = () => {
+export const DialogButton = (prop) => {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -10,6 +10,7 @@ export const DialogButton = () => {
   };
   const handleClose = () => {
     setOpen(false);
+    prop.refetch();
   };
 
   return (
@@ -26,10 +27,10 @@ export const DialogButton = () => {
         maxWidth="sm"
       >
         {/* フォームの中身 */}
-        <AddForm handleClose={() => handleClose()} />
-        {/* <DialogActions>
+        <AddForm handleClose={() => handleClose()} id={prop.id} />
+        <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-        </DialogActions> */}
+        </DialogActions>
       </Dialog>
     </div>
   );
