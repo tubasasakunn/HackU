@@ -19,6 +19,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { DialogButton } from "../components/AddArticleButton";
 
 export const Top = () => {
   const { selectedTag } = useContext(SelectedTagContext);
@@ -66,11 +67,11 @@ export const Top = () => {
     }
   };
 
-  const [{ data, error, loading }] = useAxios({
+  const [{ data: articles, error, loading }, refetch] = useAxios({
     url: apiUrl(articleType, selectedTag),
     method: api.getArticles.method,
   });
-  if (loading || !data) return <h1>loading...</h1>;
+  if (loading || !articles) return <h1>loading...</h1>;
   if (error) return <h1>Error!</h1>;
 
   const getType = (num) => {
@@ -81,7 +82,14 @@ export const Top = () => {
     }
   };
 
-  let colors = ["inherit", "inherit", "inherit", "inherit", "inherit"];
+  let colors = [
+    "inherit",
+    "inherit",
+    "inherit",
+    "inherit",
+    "inherit",
+    "inherit",
+  ];
   if (boxState === "block") {
     colors.splice(outlineIndex, 1, "neutral");
   }
@@ -101,6 +109,7 @@ export const Top = () => {
     { name: "スポーツ", color: colors[2] },
     { name: "芸能", color: colors[3] },
     { name: "エンタメ", color: colors[4] },
+    { name: "IT", color: colors[5] },
   ];
 
   const radios = [
@@ -129,18 +138,18 @@ export const Top = () => {
     width: "100%",
   };
 
-  const makeArticle = {
-    float: "right",
-    color: "black",
-    textDecoration: "none",
-  };
-
   const radioButton = {
     marginLeft: "20px",
   };
 
   const articleLink = {
     color: "black",
+  };
+
+  const makeArticle = {
+    float: "right",
+    color: "black",
+    textDecoration: "none",
   };
 
   //出力
@@ -160,7 +169,6 @@ export const Top = () => {
             </Button>
           </ThemeProvider>
         ))}
-
         <FormControl style={radioButton}>
           <RadioGroup
             row
@@ -172,18 +180,20 @@ export const Top = () => {
             {radios.map((radio) => (
               <FormControlLabel
                 value={radio.value}
+                key={radio.value}
                 control={<Radio color="default" />}
                 label={radio.label}
               />
             ))}
           </RadioGroup>
         </FormControl>
-
-        <Link to="/addArticle" style={makeArticle}>
+        {/* <Link to="/addArticle" style={makeArticle}>
           <Button style={tagStyle} variant="contained" color="inherit">
             +記事作成
           </Button>
-        </Link>
+        </Link> */}
+        {/* トップページから追加した記事は全て根の記事 */}
+        <DialogButton refetch={refetch} id={0} style={makeArticle} />
       </header>
 
       <main>
@@ -203,23 +213,25 @@ export const Top = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((data) => (
+                {articles.map((article) => (
                   <TableRow
-                    key={data.id}
+                    key={article.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
                       <Link
                         style={articleLink}
-                        to={"/tree/" + data.id.toString()}
+                        to={"/tree/" + article.id.toString()}
                       >
-                        {data.title}
+                        {article.title}
                       </Link>
                     </TableCell>
-                    <TableCell align="right">{data.tags}</TableCell>
-                    <TableCell align="right">{getType(data.comment)}</TableCell>
-                    <TableCell align="right">{data.source}</TableCell>
-                    <TableCell align="right">{data.date}</TableCell>
+                    <TableCell align="right">{article.tags}</TableCell>
+                    <TableCell align="right">
+                      {getType(article.comment)}
+                    </TableCell>
+                    <TableCell align="right">{article.source}</TableCell>
+                    <TableCell align="right">{article.date}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

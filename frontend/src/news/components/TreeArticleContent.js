@@ -87,7 +87,11 @@ export const TreeArticleContent = (props) => {
         <Typography color={articlecolor}>
           <ReactMarkdown>{props.article}</ReactMarkdown>
         </Typography>
-        <DialogButton id={props.id} refetch={props.refetch} />
+        <DialogButton
+          id={props.id}
+          refetch={props.refetch}
+          style={props.style}
+        />
       </AccordionDetails>
     </Accordion>
   );

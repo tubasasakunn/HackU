@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { AddForm } from "./AddArticleForm";
 import { Button, Dialog, DialogTitle, DialogActions } from "@mui/material/";
 
@@ -13,10 +13,20 @@ export const DialogButton = (prop) => {
     prop.refetch();
   };
 
+  const tagStyle = {
+    margin: "0 10px",
+    color: "black",
+  };
+
   return (
-    <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        記事の作成
+    <div style={prop.style}>
+      <Button
+        style={tagStyle}
+        variant="contained"
+        color="inherit"
+        onClick={handleClickOpen}
+      >
+        +記事作成
       </Button>
 
       {/* ダイアログの作成 */}

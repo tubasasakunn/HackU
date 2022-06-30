@@ -109,9 +109,9 @@ export const AddForm = (props) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <ThemeProvider theme={theme}>
-        <Container component="main">
+        <Container component="container_main">
           <CssBaseline />
           <Box
             sx={{
@@ -289,6 +289,6 @@ export const AddForm = (props) => {
           </Box>
         </Container>
       </ThemeProvider>
-    </React.Fragment>
+    </>
   );
 };
