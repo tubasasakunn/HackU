@@ -20,6 +20,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { DialogButton } from "../components/AddArticleButton";
+import { Header } from "../components/Header";
 
 export const Top = () => {
   const { selectedTag } = useContext(SelectedTagContext);
@@ -155,46 +156,47 @@ export const Top = () => {
   //出力
   return (
     <>
-      <header>
-        <img src={pic} alt="picture" />
-        {outlines.map((outline) => (
-          <ThemeProvider theme={theme}>
-            <Button
-              style={tagStyle}
-              onClick={() => clickButton(outlines.indexOf(outline))}
-              variant="contained"
-              color={outline.color}
-            >
-              {outline.name}
-            </Button>
-          </ThemeProvider>
-        ))}
-        <FormControl style={radioButton}>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-            value={articleType}
-            onChange={handleChange}
+      <Header />
+      {/* <header>
+        <img src={pic} alt="picture" /> */}
+      {outlines.map((outline) => (
+        <ThemeProvider theme={theme}>
+          <Button
+            style={tagStyle}
+            onClick={() => clickButton(outlines.indexOf(outline))}
+            variant="contained"
+            color={outline.color}
           >
-            {radios.map((radio) => (
-              <FormControlLabel
-                value={radio.value}
-                key={radio.value}
-                control={<Radio color="default" />}
-                label={radio.label}
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
-        {/* <Link to="/addArticle" style={makeArticle}>
+            {outline.name}
+          </Button>
+        </ThemeProvider>
+      ))}
+      <FormControl style={radioButton}>
+        <RadioGroup
+          row
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          name="row-radio-buttons-group"
+          value={articleType}
+          onChange={handleChange}
+        >
+          {radios.map((radio) => (
+            <FormControlLabel
+              value={radio.value}
+              key={radio.value}
+              control={<Radio color="default" />}
+              label={radio.label}
+            />
+          ))}
+        </RadioGroup>
+      </FormControl>
+      {/* <Link to="/addArticle" style={makeArticle}>
           <Button style={tagStyle} variant="contained" color="inherit">
             +記事作成
           </Button>
         </Link> */}
-        {/* トップページから追加した記事は全て根の記事 */}
-        <DialogButton refetch={refetch} id={0} style={makeArticle} />
-      </header>
+      {/* トップページから追加した記事は全て根の記事 */}
+      <DialogButton refetch={refetch} id={0} style={makeArticle} />
+      {/* </header> */}
 
       <main>
         <div style={tagContainer}>

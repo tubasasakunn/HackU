@@ -2,6 +2,7 @@ import api from "../api/Requests";
 import useAxios from "axios-hooks";
 import { useParams } from "react-router-dom";
 import { TreeArticleContent } from "../components/TreeArticleContent";
+import { Header } from "../components/Header";
 import { createRef, useRef } from "react";
 
 import Xarrow from "react-xarrows";
@@ -105,6 +106,7 @@ export const Tree = () => {
 
   return (
     <div>
+      <Header />
       {parent.map((item, index) => {
         return (
           <Box sx={{ ml: 0, p: 1 }}>
