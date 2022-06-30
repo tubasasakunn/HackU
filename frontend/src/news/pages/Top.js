@@ -1,11 +1,8 @@
 import { Link } from "react-router-dom";
 import useAxios from "axios-hooks";
-import { useState } from "react";
-import { useContext } from "react";
+import { useState, useEffect } from "react";
 import api from "../api/Requests";
 import { TagBox } from "../components/TagBox";
-import { SelectedTagContext } from "../components/providers/selectedTagProvider";
-import pic from "../../images/logo.png";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -23,24 +20,19 @@ import { DialogButton } from "../components/AddArticleButton";
 import { Header } from "../components/Header";
 
 export const Top = () => {
-  const { selectedTag } = useContext(SelectedTagContext);
-  const [outlineIndex, setOutlineIndex] = useState();
+  const [selectedTag, setSelectedTag] = useState("");
+  const [selectedOutline, setSelectedOutline] = useState("");
   const [boxState, setBoxState] = useState("none");
   const [articleType, setArticleType] = useState("all");
 
-  const clickButton = (clickedIndex) => {
-    setBoxState(() => {
-      if (clickedIndex === outlineIndex) {
-        if (boxState === "none") {
-          return "block";
-        } else {
-          return "none";
-        }
-      } else {
-        return "block";
-      }
-    });
-    setOutlineIndex(clickedIndex);
+  const clickButton = (outline) => {
+    if (selectedOutline === outline) {
+      setBoxState("none");
+      setSelectedOutline("");
+    } else {
+      setBoxState("block");
+      setSelectedOutline(outline);
+    }
   };
 
   const handleChange = (event) => {
@@ -48,32 +40,45 @@ export const Top = () => {
   };
 
   const apiUrl = (articleType, selectedTag) => {
-    const defaultUrl = "http://127.0.0.1:8000/articles/";
+    console.log(articleType, selectedTag);
     if (selectedTag === "") {
       if (articleType === "all") {
-        return defaultUrl;
+        return "";
       } else if (articleType === "fact") {
-        return defaultUrl + "?comment=False";
+        return "comment=False";
       } else {
-        return defaultUrl + "?comment=True";
+        return "comment=True";
       }
     } else {
       if (articleType === "all") {
-        return defaultUrl + `?tag=${selectedTag}`;
+        return `tag=${selectedTag}`;
       } else if (articleType === "fact") {
-        return defaultUrl + `?tag=${selectedTag}&comment=False`;
+        return `tag=${selectedTag}&comment=False`;
       } else {
-        return defaultUrl + `?tag=${selectedTag}&comment=True`;
+        return `tag=${selectedTag}&comment=True`;
       }
     }
   };
+  useEffect(() => {
+    // Update the document title using the browser API
+    refetch();
+  }, [selectedTag]);
 
   const [{ data: articles, error, loading }, refetch] = useAxios({
-    url: apiUrl(articleType, selectedTag),
-    method: api.getArticles.method,
+    url: api.getArticlesFromQuery.url(apiUrl(articleType, selectedTag)),
+    method: api.getArticlesFromQuery.method,
   });
   if (loading || !articles) return <h1>loading...</h1>;
   if (error) return <h1>Error!</h1>;
+
+  const selectTag = (tag) => {
+    // console.log(selectedTag, tag);
+    setSelectedTag(tag === selectedTag ? "" : tag);
+  };
+
+  const isSelectedtTag = (tag) => {
+    return selectedTag === tag;
+  };
 
   const getType = (num) => {
     if (num === 0) {
@@ -83,6 +88,7 @@ export const Top = () => {
     }
   };
 
+  const outlines = ["政治", "経済", "スポーツ", "芸能", "エンタメ", "IT"];
   let colors = [
     "inherit",
     "inherit",
@@ -92,7 +98,7 @@ export const Top = () => {
     "inherit",
   ];
   if (boxState === "block") {
-    colors.splice(outlineIndex, 1, "neutral");
+    colors.splice(outlines.indexOf(selectedOutline), 1, "neutral");
   }
 
   const theme = createTheme({
@@ -103,15 +109,6 @@ export const Top = () => {
       },
     },
   });
-
-  const outlines = [
-    { name: "政治", color: colors[0] },
-    { name: "経済", color: colors[1] },
-    { name: "スポーツ", color: colors[2] },
-    { name: "芸能", color: colors[3] },
-    { name: "エンタメ", color: colors[4] },
-    { name: "IT", color: colors[5] },
-  ];
 
   const radios = [
     { value: "all", label: "全て" },
@@ -159,15 +156,15 @@ export const Top = () => {
       <Header />
       {/* <header>
         <img src={pic} alt="picture" /> */}
-      {outlines.map((outline) => (
+      {outlines.map((outline, idx) => (
         <ThemeProvider theme={theme}>
           <Button
             style={tagStyle}
-            onClick={() => clickButton(outlines.indexOf(outline))}
+            onClick={() => clickButton(outline)}
             variant="contained"
-            color={outline.color}
+            color={colors[idx]}
           >
-            {outline.name}
+            {outline}
           </Button>
         </ThemeProvider>
       ))}
@@ -189,18 +186,16 @@ export const Top = () => {
           ))}
         </RadioGroup>
       </FormControl>
-      {/* <Link to="/addArticle" style={makeArticle}>
-          <Button style={tagStyle} variant="contained" color="inherit">
-            +記事作成
-          </Button>
-        </Link> */}
       {/* トップページから追加した記事は全て根の記事 */}
       <DialogButton refetch={refetch} id={0} style={makeArticle} />
       {/* </header> */}
-
       <main>
         <div style={tagContainer}>
-          <TagBox value={outlineIndex}></TagBox>
+          <TagBox
+            value={selectedOutline}
+            selectTag={(val) => selectTag(val)}
+            isSelectedTag={(val) => isSelectedtTag(val)}
+          ></TagBox>
         </div>
 
         <div style={tableWrapper}>
