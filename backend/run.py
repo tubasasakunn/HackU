@@ -68,6 +68,7 @@ async def read_item(id:int=None,tag: str=None,comment: bool=None, year: int = No
         ids=[i[0] for i in tags]
     else:
         ids=None
+
     print(ids)
     if ids==[]:
         return []

@@ -31,6 +31,6 @@ docker-compose up -d --build
 
 ```
 cd frontend
-pip install 
+npm install 
 npm start # https://localhost:3000で起動
 ```
