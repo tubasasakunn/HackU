@@ -6,11 +6,9 @@ import pic from "../../images/logo.png";
 export const Header = (props) => {
   return (
     <React.Fragment>
-      <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Link to="/">
-          <img src={pic} alt="Image" />
-        </Link>
-      </Toolbar>
+      <Link to="/">
+        <img src={pic} alt="Image" />
+      </Link>
     </React.Fragment>
   );
 };
