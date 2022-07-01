@@ -256,9 +256,7 @@ export const AddForm = (props) => {
                     render={({ field }) => (
                       <FormGroup>
                         <FormControlLabel
-                          control={
-                            <Switch {...field} defaultChecked fullWidth />
-                          }
+                          control={<Switch {...field} fullWidth />}
                           label="事実"
                         />
                       </FormGroup>

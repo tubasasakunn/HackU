@@ -19,6 +19,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { DialogButton } from "../components/AddArticleButton";
 import { Header } from "../components/Header";
 import { LinearProgress } from "@mui/material";
+import axios from "axios";
 
 export const Top = () => {
   const [selectedTag, setSelectedTag] = useState("");
@@ -49,6 +50,8 @@ export const Top = () => {
     }
   };
 
+  const outlines = ["政治", "経済", "スポーツ", "芸能", "エンタメ", "IT"];
+
   const handleChange = (event) => {
     setSelectedArticleType(event.target.value);
   };
@@ -78,10 +81,48 @@ export const Top = () => {
     // }, [selectedArticleType, selectedOutline]);
   }, [selectedTag]);
 
+  /* 記事を取得 */
   const [{ data: articles, error, loading }, refetch] = useAxios({
-    url: api.getArticlesFromQuery.url(apiUrl()),
-    method: api.getArticlesFromQuery.method,
+    url: api.getArticles.url(),
+    method: api.getArticles.method,
   });
+
+  // const getTags = async () => {
+  //   const promises = [];
+
+  //   for (const outline of outlines) {
+  //     const result = axios.get(api.getTagsFromQuery.url(`outline=${outline}`));
+  //     promises.push(result);
+  //   }
+
+  //   const outline_tag_list = await Promise.all(promises);
+  //   const outline_tag = {};
+  //   for (let i = 0; i < outlines.length; i++) {
+  //     outline_tag[outlines[i]] = outline_tag_list[i];
+  //   }
+  //   return outline_tag;
+  // };
+  // console.log(getTags());
+
+  // // タグ名を取得
+  // const getTags = async (outline) => {
+  //   const req = await axios
+  //     .get(api.getTagsFromQuery.url(`outline=${outline}`))
+  //     .then((res) => res.data.tags);
+  //     console.log(req);
+  //     return req;
+  // };
+
+  // let outline_tag = {};
+  // for (const outline of outlines) {
+  //   outline_tag[outline] = getTags(outline);
+  // }
+  // console.log(outline_tag);
+
+  // const [{ data: articles, error, loading }, refetch] = useAxios({
+  //   url: api.getArticlesFromQuery.url(apiUrl()),
+  //   method: api.getArticlesFromQuery.method,
+  // });
   // if (loading || !articles) return <h1>loading...</h1>;
   // if (error) return <h1>Error!</h1>;
 
@@ -102,7 +143,6 @@ export const Top = () => {
     }
   };
 
-  const outlines = ["政治", "経済", "スポーツ", "芸能", "エンタメ", "IT"];
   let colors = [
     "inherit",
     "inherit",
@@ -124,12 +164,13 @@ export const Top = () => {
     },
   });
 
-  const radios = [
-    { value: "all", label: "全て" },
-    { value: "fact", label: "事実" },
-    { value: "comment", label: "評論" },
-  ];
-
+  // const radios = [
+  //   { value: "all", label: "全て" },
+  //   { value: "fact", label: "事実" },
+  //   { value: "comment", label: "評論" },
+  // ];
+  // const radios = { all: "全て", fact: "事実", comment: "評論" };
+  const radios = { 全て: "all", 事実: "fact", 評論: "comment" };
   const colomns = ["タグ", "種別", "ソース", "日付"];
 
   //css
@@ -190,12 +231,12 @@ export const Top = () => {
           value={selectedArticleType}
           onChange={handleChange}
         >
-          {radios.map((radio) => (
+          {Object.keys(radios).map((key) => (
             <FormControlLabel
-              value={radio.value}
-              key={radio.value}
+              value={radios[key]}
+              key={radios[key]}
               control={<Radio color="default" />}
-              label={radio.label}
+              label={key}
             />
           ))}
         </RadioGroup>
@@ -227,7 +268,47 @@ export const Top = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {articles.map((article) => (
+                  {articles
+                    .filter((article) => {
+                      // console.log(
+                      //   article.comment,
+                      //   radios[article.comment],
+                      //   selectedArticleType
+                      // );
+                      return (
+                        (selectedArticleType === "all" ||
+                          radios[getType(article.comment)] ===
+                            selectedArticleType) &&
+                        (selectedOutline === "" ||
+                          article.outline === selectedOutline) &&
+                        (selectedTag === "" ||
+                          article.tags.includes(selectedTag))
+                      );
+                    })
+                    .map((article) => (
+                      <TableRow
+                        key={article.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          <Link
+                            style={articleLink}
+                            to={"/tree/" + article.id.toString()}
+                          >
+                            {article.title}
+                          </Link>
+                        </TableCell>
+                        <TableCell align="right">{article.tags}</TableCell>
+                        <TableCell align="right">
+                          {getType(article.comment)}
+                        </TableCell>
+                        <TableCell align="right">{article.source}</TableCell>
+                        <TableCell align="right">{article.date}</TableCell>
+                      </TableRow>
+                    ))}
+                  {/* {articles.map((article) => (
                     <TableRow
                       key={article.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -247,7 +328,7 @@ export const Top = () => {
                       <TableCell align="right">{article.source}</TableCell>
                       <TableCell align="right">{article.date}</TableCell>
                     </TableRow>
-                  ))}
+                  ))} */}
                 </TableBody>
               </Table>
             </TableContainer>
