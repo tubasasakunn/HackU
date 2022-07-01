@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { TreeArticleContent } from "../components/TreeArticleContent";
 import { Header } from "../components/Header";
 import { createRef, useRef } from "react";
+import { LinearProgress } from "@mui/material";
 
 import Xarrow from "react-xarrows";
 
@@ -24,9 +25,9 @@ export const Tree = () => {
   });
 
   const listRefs = useRef([]);
-
-  if (loading || !articles) return <h1>loading...</h1>;
+  if (loading || !articles) return <LinearProgress />;
   if (error) return <h1>Error!</h1>;
+
   const parent = articles["parent"];
   const bros = articles["bros"];
   const child = articles["child"];
@@ -107,11 +108,13 @@ export const Tree = () => {
   return (
     <div>
       <Header />
+
       {parent.map((item, index) => {
         return (
           <Box sx={{ ml: 0, p: 1 }}>
             <TreeArticleContent
               title={item.title}
+              date={item.date}
               article={item.article}
               class={"parent"}
               comment={item.comment}
@@ -128,6 +131,7 @@ export const Tree = () => {
           <Box sx={{ ml: 12, p: 1 }}>
             <TreeArticleContent
               title={item.title}
+              date={item.date}
               article={item.article}
               class={"bros"}
               comment={item.comment}
@@ -144,6 +148,7 @@ export const Tree = () => {
           <Box sx={{ ml: 12, p: 1 }}>
             <TreeArticleContent
               title={item.title}
+              date={item.date}
               article={item.article}
               class={"self"}
               comment={item.comment}
@@ -160,6 +165,7 @@ export const Tree = () => {
           <Box sx={{ ml: 24, p: 1 }}>
             <TreeArticleContent
               title={item.title}
+              date={item.date}
               article={item.article}
               class={"child"}
               comment={item.comment}

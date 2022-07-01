@@ -5,6 +5,7 @@ import { MultipleSelectChip } from "../components/MultiSelect";
 import { format } from "date-fns";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LinearProgress } from "@mui/material";
 import React from "react";
 import {
   TextField,
@@ -74,29 +75,39 @@ export const AddForm = (props) => {
   );
 
   /* 大枠選択用に大枠一覧を取得　*/
-  const [
-    { data: outlines, error: outlineGetError, loading: outlineGetLoading },
-  ] = useAxios({
-    url: api.getOutlines.url(),
-    method: api.getOutlines.method,
-  });
+  // const [
+  //   { data: outlines, error: outlineGetError, loading: outlineGetLoading },
+  // ] = useAxios({
+  //   url: api.getOutlines.url(),
+  //   method: api.getOutlines.method,
+  // });
+  const outlines = {
+    outlines: ["政治", "経済", "スポーツ", "芸能", "エンタメ", "IT"],
+  };
 
   const [{ data }, postData] = useAxios(
     { method: api.postArticle.method },
     { manulal: true }
   );
 
-  if (tagGetLoading || outlineGetLoading || !tags || !outlines)
-    return <h1>loading...</h1>;
-  if (tagGetError || outlineGetError) return <h1>Error!</h1>;
+  // if (tagGetLoading || outlineGetLoading || !tags || !outlines)
+  //   return <h1>loading...</h1>;
+  // if (tagGetError || outlineGetError) return <h1>Error!</h1>;
+  // if (tagGetLoading || !tags) return <h1>loading...</h1>;
+  // if (tagGetError) return <h1>Error!</h1>;
+
+  if (tagGetLoading || !tags) return <LinearProgress />;
+  if (tagGetError) return <h1>Error!</h1>;
 
   /* 送信時の動作*/
   const onSubmit = (formData) => {
     // 整形
     // formData.tags = formData.tags.filter(Boolean);
+    // console.log(formData.comment);
     formData.timestamp = format(formData.timestamp, "yyyy-MM-dd");
-    formData.parent = 1;
-    console.log(formData.timestamp);
+    formData.parent = props.parent_id;
+    // formData.parent = 1;
+    // console.log(formData);
     const post_reload = async () => {
       await postData({
         url: api.postArticle.url(),
@@ -248,7 +259,7 @@ export const AddForm = (props) => {
                           control={
                             <Switch {...field} defaultChecked fullWidth />
                           }
-                          label="コメント or 事実"
+                          label="事実"
                         />
                       </FormGroup>
                     )}
