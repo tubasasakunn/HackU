@@ -4,7 +4,7 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, LinearProgress } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { Container, Grid, Box } from "@mui/material";
 
@@ -20,7 +20,7 @@ export const TagBox = (props) => {
   const validationRules = {
     tag: {
       required: "タグ名を入力してください",
-      validate: (val) => !tags.tags.includes(val) || "タグが既に存在します",
+      validate: (v) => (!tags.tags.includes(v) ? true : "タグが既に存在します"),
     },
   };
 
@@ -44,17 +44,17 @@ export const TagBox = (props) => {
     method: api.getTags.method,
   });
 
-  if (loading || !tags) return <CircularProgress />;
+  if (loading || !tags) return <LinearProgress />;
   if (error) return <h1>Error!</h1>;
 
-  const onSubmit = (formDate) => {
-    formDate.outline = props.value;
-    console.log(formDate);
+  const onSubmit = (formData) => {
+    formData.outline = props.value;
+
     const post_reload = async () => {
       // await setDisplayInput(displayInput === "none" ? "block" : "none");
       await postData({
         url: api.postTag.url(),
-        data: formDate,
+        data: formData,
       });
       await refetch();
     };

@@ -42,7 +42,7 @@ export const DialogButton = (prop) => {
       >
         <div onClick={stopPropagation} style={{ padding: "16px" }}>
           {/* フォームの中身 */}
-          <AddForm handleClose={handleClose} id={prop.id} />
+          <AddForm handleClose={handleClose} parent_id={prop.parent_id} />
           {/* <DialogActions>
           <Button onClick={handleClose}>Close</Button>
         </DialogActions> */}

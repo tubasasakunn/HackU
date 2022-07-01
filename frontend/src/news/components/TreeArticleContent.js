@@ -78,6 +78,8 @@ export const TreeArticleContent = (props) => {
         <Typography color={titlecolor}>
           <a href={path + String(props.id)}>{props.title}</a>
         </Typography>
+        <div style={{ flexGrow: 1 }}></div>
+        <Typography sx={{ color: "text.secondary" }}>{props.date}</Typography>
       </AccordionSummary>
 
       <AccordionDetails
@@ -88,7 +90,7 @@ export const TreeArticleContent = (props) => {
           <ReactMarkdown>{props.article}</ReactMarkdown>
         </Typography>
         <DialogButton
-          id={props.id}
+          parent_id={props.id}
           refetch={props.refetch}
           style={props.style}
         />

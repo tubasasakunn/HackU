@@ -18,12 +18,26 @@ import FormControl from "@mui/material/FormControl";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { DialogButton } from "../components/AddArticleButton";
 import { Header } from "../components/Header";
+import { LinearProgress } from "@mui/material";
 
 export const Top = () => {
   const [selectedTag, setSelectedTag] = useState("");
   const [selectedOutline, setSelectedOutline] = useState("");
+  const [selectedArticleType, setSelectedArticleType] = useState("all");
   const [boxState, setBoxState] = useState("none");
-  const [articleType, setArticleType] = useState("all");
+
+  // let selectedOutline = "";
+  // let selectedTag = "";
+  // let selectedArticleType = "all";
+  // const setSelectedArticleType = (articletype) => {
+  //   selectedArticleType = articletype;
+  // };
+  // const setSelectedOutline = (outline) => {
+  //   selectedOutline = outline;
+  // };
+  // const setSelectedTag = (tag) => {
+  //   selectedTag = tag;
+  // };
 
   const clickButton = (outline) => {
     if (selectedOutline === outline) {
@@ -36,40 +50,40 @@ export const Top = () => {
   };
 
   const handleChange = (event) => {
-    setArticleType(event.target.value);
+    setSelectedArticleType(event.target.value);
   };
 
-  const apiUrl = (articleType, selectedTag) => {
-    console.log(articleType, selectedTag);
-    if (selectedTag === "") {
-      if (articleType === "all") {
-        return "";
-      } else if (articleType === "fact") {
-        return "comment=False";
-      } else {
-        return "comment=True";
-      }
-    } else {
-      if (articleType === "all") {
-        return `tag=${selectedTag}`;
-      } else if (articleType === "fact") {
-        return `tag=${selectedTag}&comment=False`;
-      } else {
-        return `tag=${selectedTag}&comment=True`;
-      }
-    }
+  const apiUrl = () => {
+    // console.log(selectedArticleType, selectedTag, selectedOutline);
+    let query_params = {};
+    if (selectedArticleType !== "all")
+      query_params["comment"] =
+        selectedArticleType === "fact" ? "False" : "True";
+    if (selectedTag !== "") query_params["tag"] = selectedTag;
+    if (selectedOutline !== "") query_params["outline"] = selectedOutline;
+    // console.log(query_params === undefined);
+
+    const query =
+      query_params !== undefined ? new URLSearchParams(query_params) : "";
+    // console.log(query.toString());
+    return query;
   };
   useEffect(() => {
     // Update the document title using the browser API
+    // const reload_aync = async ()=>{
+    //   await
+    // }
     refetch();
+    // }, [selectedOutline, selectedArticleType, selectedTag]);
+    // }, [selectedArticleType, selectedOutline]);
   }, [selectedTag]);
 
   const [{ data: articles, error, loading }, refetch] = useAxios({
-    url: api.getArticlesFromQuery.url(apiUrl(articleType, selectedTag)),
+    url: api.getArticlesFromQuery.url(apiUrl()),
     method: api.getArticlesFromQuery.method,
   });
-  if (loading || !articles) return <h1>loading...</h1>;
-  if (error) return <h1>Error!</h1>;
+  // if (loading || !articles) return <h1>loading...</h1>;
+  // if (error) return <h1>Error!</h1>;
 
   const selectTag = (tag) => {
     // console.log(selectedTag, tag);
@@ -173,7 +187,7 @@ export const Top = () => {
           row
           aria-labelledby="demo-row-radio-buttons-group-label"
           name="row-radio-buttons-group"
-          value={articleType}
+          value={selectedArticleType}
           onChange={handleChange}
         >
           {radios.map((radio) => (
@@ -187,7 +201,7 @@ export const Top = () => {
         </RadioGroup>
       </FormControl>
       {/* トップページから追加した記事は全て根の記事 */}
-      <DialogButton refetch={refetch} id={0} style={makeArticle} />
+      <DialogButton refetch={refetch} parent_id={0} style={makeArticle} />
       {/* </header> */}
       <main>
         <div style={tagContainer}>
@@ -198,43 +212,47 @@ export const Top = () => {
           ></TagBox>
         </div>
 
-        <div style={tableWrapper}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>タイトル</TableCell>
-                  {colomns.map((colomn) => (
-                    <TableCell align="right">{colomn}</TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {articles.map((article) => (
-                  <TableRow
-                    key={article.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      <Link
-                        style={articleLink}
-                        to={"/tree/" + article.id.toString()}
-                      >
-                        {article.title}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="right">{article.tags}</TableCell>
-                    <TableCell align="right">
-                      {getType(article.comment)}
-                    </TableCell>
-                    <TableCell align="right">{article.source}</TableCell>
-                    <TableCell align="right">{article.date}</TableCell>
+        {loading ? (
+          <LinearProgress />
+        ) : (
+          <div style={tableWrapper}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>タイトル</TableCell>
+                    {colomns.map((colomn) => (
+                      <TableCell align="right">{colomn}</TableCell>
+                    ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+                </TableHead>
+                <TableBody>
+                  {articles.map((article) => (
+                    <TableRow
+                      key={article.id}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        <Link
+                          style={articleLink}
+                          to={"/tree/" + article.id.toString()}
+                        >
+                          {article.title}
+                        </Link>
+                      </TableCell>
+                      <TableCell align="right">{article.tags}</TableCell>
+                      <TableCell align="right">
+                        {getType(article.comment)}
+                      </TableCell>
+                      <TableCell align="right">{article.source}</TableCell>
+                      <TableCell align="right">{article.date}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        )}
       </main>
     </>
   );
