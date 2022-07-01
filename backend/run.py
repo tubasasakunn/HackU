@@ -52,7 +52,7 @@ async def create_item(article: Article):
 
 #curl 'http://127.0.0.1:8000/dbs/?tag=%E3%83%AD%E3%82%B7%E3%82%A2&comment=False&year=2022&month=8&day=12'
 @app.get("/articles/")
-async def read_item(id:int=None,tag: str=None,comment: bool=None, year: int = None,month: int = None, day: int = None):
+async def read_item(id:int=None,tag: str=None,comment: bool=None,outline: str=None, year: int = None,month: int = None, day: int = None):
     print([year,month,day])
     if not None in [year,month,day]:
         dt = datetime.date(year=year,month=month,day=day)
@@ -65,11 +65,11 @@ async def read_item(id:int=None,tag: str=None,comment: bool=None, year: int = No
 
     if not tag==None:
         tags=ad.get_tags(name=tag)
-        ids=[i[0] for i in tags]
+        print(tags)
+        ids=[i[3] for i in tags]
     else:
         ids=None
 
-    print(ids)
     if ids==[]:
         return []
 
@@ -81,6 +81,8 @@ async def read_item(id:int=None,tag: str=None,comment: bool=None, year: int = No
         articles=articles[articles['date']==dt]
     if not id ==None:
         articles=articles[articles['id']==id]
+    if not outline ==None:
+        articles=articles[articles['outline']==outline]
 
     res=[]
     for article in articles.iterrows():
