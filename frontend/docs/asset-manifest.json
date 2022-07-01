@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/HackU/static/css/main.360da29d.css",
+    "main.js": "/HackU/static/js/main.4d0983d8.js",
+    "static/js/787.8ae0d0c6.chunk.js": "/HackU/static/js/787.8ae0d0c6.chunk.js",
+    "static/media/logo.png": "/HackU/static/media/logo.a12ae4d2c13286a163dc.png",
+    "index.html": "/HackU/index.html",
+    "main.360da29d.css.map": "/HackU/static/css/main.360da29d.css.map",
+    "main.4d0983d8.js.map": "/HackU/static/js/main.4d0983d8.js.map",
+    "787.8ae0d0c6.chunk.js.map": "/HackU/static/js/787.8ae0d0c6.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.360da29d.css",
+    "static/js/main.4d0983d8.js"
+  ]
+}
