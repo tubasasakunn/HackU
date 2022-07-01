@@ -25,6 +25,7 @@ export const Top = () => {
   const [selectedTag, setSelectedTag] = useState("");
   const [selectedOutline, setSelectedOutline] = useState("");
   const [selectedArticleType, setSelectedArticleType] = useState("all");
+  // const [tagObj, setTagObj] = useState({});
   const [boxState, setBoxState] = useState("none");
 
   // let selectedOutline = "";
@@ -56,29 +57,22 @@ export const Top = () => {
     setSelectedArticleType(event.target.value);
   };
 
-  const apiUrl = () => {
-    // console.log(selectedArticleType, selectedTag, selectedOutline);
-    let query_params = {};
-    if (selectedArticleType !== "all")
-      query_params["comment"] =
-        selectedArticleType === "fact" ? "False" : "True";
-    if (selectedTag !== "") query_params["tag"] = selectedTag;
-    if (selectedOutline !== "") query_params["outline"] = selectedOutline;
-    // console.log(query_params === undefined);
-
-    const query =
-      query_params !== undefined ? new URLSearchParams(query_params) : "";
-    // console.log(query.toString());
-    return query;
-  };
   useEffect(() => {
-    // Update the document title using the browser API
-    // const reload_aync = async ()=>{
-    //   await
-    // }
     refetch();
     // }, [selectedOutline, selectedArticleType, selectedTag]);
     // }, [selectedArticleType, selectedOutline]);
+    // async function fetchTag(outline) {
+    //   const res = await axios.get(
+    //     api.getTagsFromQuery.url(`outline=${outline}`)
+    //   );
+    //   setTagObj({ ...tagObj, [outline]: res.data.tags });
+    // }
+    // async function fetchOutline() {
+    //   for (const outline of outlines) {
+    //     await fetchTag(outline);
+    //   }
+    // }
+    // fetchOutline();
   }, [selectedTag]);
 
   /* 記事を取得 */
@@ -86,45 +80,6 @@ export const Top = () => {
     url: api.getArticles.url(),
     method: api.getArticles.method,
   });
-
-  // const getTags = async () => {
-  //   const promises = [];
-
-  //   for (const outline of outlines) {
-  //     const result = axios.get(api.getTagsFromQuery.url(`outline=${outline}`));
-  //     promises.push(result);
-  //   }
-
-  //   const outline_tag_list = await Promise.all(promises);
-  //   const outline_tag = {};
-  //   for (let i = 0; i < outlines.length; i++) {
-  //     outline_tag[outlines[i]] = outline_tag_list[i];
-  //   }
-  //   return outline_tag;
-  // };
-  // console.log(getTags());
-
-  // // タグ名を取得
-  // const getTags = async (outline) => {
-  //   const req = await axios
-  //     .get(api.getTagsFromQuery.url(`outline=${outline}`))
-  //     .then((res) => res.data.tags);
-  //     console.log(req);
-  //     return req;
-  // };
-
-  // let outline_tag = {};
-  // for (const outline of outlines) {
-  //   outline_tag[outline] = getTags(outline);
-  // }
-  // console.log(outline_tag);
-
-  // const [{ data: articles, error, loading }, refetch] = useAxios({
-  //   url: api.getArticlesFromQuery.url(apiUrl()),
-  //   method: api.getArticlesFromQuery.method,
-  // });
-  // if (loading || !articles) return <h1>loading...</h1>;
-  // if (error) return <h1>Error!</h1>;
 
   const selectTag = (tag) => {
     // console.log(selectedTag, tag);
@@ -204,6 +159,7 @@ export const Top = () => {
     color: "black",
     textDecoration: "none",
   };
+  // console.log(tagObj);
 
   //出力
   return (
